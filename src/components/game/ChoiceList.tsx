@@ -67,7 +67,7 @@ export const ChoiceList = ({
 
             {/* Visual indicator for choice number */}
             <div className="absolute left-3 top-3 w-6 h-6 bg-red-accent/20 rounded-full flex items-center justify-center text-xs font-bold text-pale-text">
-              {index + 1}
+              {}
             </div>
           </div>
         );
@@ -75,7 +75,7 @@ export const ChoiceList = ({
 
       {/* Help text */}
       <div className="mt-4 text-sm text-pale-text-muted">
-        <p>💡 Some choices may require specific items from your inventory.</p>
+        <p> Some choices may require specific items from your inventory.</p>
       </div>
     </div>
   );

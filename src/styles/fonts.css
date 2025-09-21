@@ -1,0 +1,196 @@
+/* Font Imports and Definitions */
+
+@import url("https://fonts.googleapis.com/css2?family=Creepster&family=Nosifer&family=Eater&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Uncial+Antiqua&family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap");
+
+/* Font Face Definitions */
+@font-face {
+  font-family: "GTASanAndreas";
+  src: url("./assets/fonts/gta-sa.woff2") format("woff2"),
+    url("./assets/fonts/gta-sa.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PricedownRegular";
+  src: url("./assets/fonts/pricedown.woff2") format("woff2"),
+    url("./assets/fonts/pricedown.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Font Variable Definitions */
+:root {
+  /* Primary Fonts */
+  --font-primary: "GTASanAndreas", "Orbitron", "Arial Black", sans-serif;
+  --font-secondary: "PricedownRegular", "Exo 2", "Impact", sans-serif;
+  --font-body: "Exo 2", "Segoe UI", "Tahoma", sans-serif;
+  --font-elegant: "Orbitron", "Futura", "Helvetica Neue", sans-serif;
+
+  /* Horror Fonts */
+  --font-scary: "Creepster", "Nosifer", "Eater", cursive;
+  --font-blood: "Nosifer", "Creepster", serif;
+  --font-horror: "Eater", "Nosifer", monospace;
+
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 600;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+}
+
+/* Font Utility Classes */
+.font-primary {
+  font-family: var(--font-primary);
+}
+
+.font-secondary {
+  font-family: var(--font-secondary);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.font-elegant {
+  font-family: var(--font-elegant);
+}
+
+.font-scary {
+  font-family: var(--font-scary);
+}
+
+.font-blood {
+  font-family: var(--font-blood);
+}
+
+.font-horror {
+  font-family: var(--font-horror);
+}
+
+/* Font Weight Utilities */
+.font-light {
+  font-weight: var(--font-weight-light);
+}
+
+.font-normal {
+  font-weight: var(--font-weight-normal);
+}
+
+.font-medium {
+  font-weight: var(--font-weight-medium);
+}
+
+.font-bold {
+  font-weight: var(--font-weight-bold);
+}
+
+.font-black {
+  font-weight: var(--font-weight-black);
+}
+
+/* Typography Scale */
+.text-horror-xs {
+  font-size: 0.75rem;
+  font-family: var(--font-scary);
+}
+
+.text-horror-sm {
+  font-size: 0.875rem;
+  font-family: var(--font-scary);
+}
+
+.text-horror-base {
+  font-size: 1rem;
+  font-family: var(--font-scary);
+}
+
+.text-horror-lg {
+  font-size: 1.125rem;
+  font-family: var(--font-scary);
+}
+
+.text-horror-xl {
+  font-size: 1.25rem;
+  font-family: var(--font-scary);
+}
+
+.text-horror-2xl {
+  font-size: 1.5rem;
+  font-family: var(--font-scary);
+}
+
+.text-horror-3xl {
+  font-size: 1.875rem;
+  font-family: var(--font-scary);
+}
+
+.text-horror-4xl {
+  font-size: 2.25rem;
+  font-family: var(--font-scary);
+}
+
+/* GTA-style Typography */
+.text-gta-logo {
+  font-family: var(--font-primary);
+  font-weight: var(--font-weight-black);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.text-gta-menu {
+  font-family: var(--font-secondary);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.text-gta-body {
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-normal);
+}
+
+/* Font Loading Optimization */
+.font-loading {
+  font-display: swap;
+}
+
+/* Fallback Font Stack */
+.font-fallback {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Responsive Font Sizes */
+@media (max-width: 768px) {
+  .text-horror-4xl {
+    font-size: 1.875rem;
+  }
+
+  .text-horror-3xl {
+    font-size: 1.5rem;
+  }
+
+  .text-horror-2xl {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .text-horror-4xl {
+    font-size: 1.5rem;
+  }
+
+  .text-horror-3xl {
+    font-size: 1.25rem;
+  }
+
+  .text-horror-2xl {
+    font-size: 1.125rem;
+  }
+}

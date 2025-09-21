@@ -24,7 +24,8 @@ export const Inventory = ({
 }: InventoryProps) => {
   // Define item icons using Lucide React
   const getItemIcon = (item: string): ReactElement => {
-    const iconProps = { size: 20, className: "text-red-accent" };
+    // Replaced with a class that uses the horror accent color
+    const iconProps = { size: 20, className: "text-horror" };
 
     const itemIcons: Record<string, ReactElement> = {
       Asin: <Sparkles {...iconProps} />, // Salt - sparkles for magical properties
@@ -43,48 +44,36 @@ export const Inventory = ({
   };
 
   return (
-    <div
-      className={`bg-gray-800 border-2 border-gray-600 rounded-lg p-4 ${className}`}
-    >
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-lg font-semibold text-pale-text">
+    // Use the `card-horror` class for a consistent, dark aesthetic
+    <div className={`card-horror ${className}`}>
+      <div className="flex items-center justify-between mb-2 border-b border-gray-700 pb-2">
+        <h3 className="text-base font-elegant text-pale-text">
           {playerName ? `${playerName}'s Inventory` : "Inventory"}
         </h3>
-        <span className="text-sm text-pale-text-muted bg-gray-700 px-2 py-1 rounded-full">
-          {items.length} items
+        <span className="text-xs text-pale-text-muted bg-gray-700 px-2 py-1 rounded-full">
+          {items.length}
         </span>
       </div>
 
       {items.length === 0 ? (
-        <div className="text-center py-6">
-          <Package size={48} className="mx-auto mb-2 text-pale-text-muted" />
-          <p className="text-pale-text-muted italic">Your inventory is empty</p>
-          <p className="text-sm text-pale-text-muted mt-1">
-            Collect items during your adventure
+        <div className="text-center py-3">
+          <Package size={32} className="mx-auto mb-1 text-pale-text-muted" />
+          <p className="text-sm text-pale-text-muted italic">
+            A chilling emptiness...
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+        // Use a horror-themed class for the list container
+        <div className="space-y-1">
           {items.map((item, index) => (
             <div
               key={`${item}-${index}`}
-              className="flex items-center space-x-2 bg-gray-700 hover:bg-gray-600 transition-colors duration-200 p-3 rounded-lg border border-gray-600 hover:border-red-accent"
+              className="inventory-item focus-horror"
             >
               <span aria-label={item}>{getItemIcon(item)}</span>
-              <span className="text-sm font-medium text-pale-text truncate">
-                {item}
-              </span>
+              <span className="text-sm font-medium text-pale-text">{item}</span>
             </div>
           ))}
-        </div>
-      )}
-
-      {/* Useful items hint */}
-      {items.length > 0 && (
-        <div className="mt-3 pt-3 border-t border-gray-600">
-          <p className="text-xs text-pale-text-muted">
-            💡 These items may be useful for certain choices in your adventure
-          </p>
         </div>
       )}
     </div>

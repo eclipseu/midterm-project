@@ -22,10 +22,19 @@ export interface Choice {
   to: string;
   requires?: string; // Item required to select this choice
   hideIf?: string; // Hide choice if player has this item
+  effects?: ChoiceEffect[]; // Effects when choice is selected
+  jumpscareAsset?: string; // Path to jumpscare asset (video, image, .vg file)
+}
+
+// Choice effects
+export interface ChoiceEffect {
+  type: "hp" | "item" | "flag";
+  value: number | string;
 }
 
 // Story node structure
 export interface StoryNode {
+  id?: string; // Node identifier
   text: string;
   choices?: Choice[];
   onArrive?: NodeAction;
@@ -44,6 +53,7 @@ export interface NodeAction {
 export type GameAction =
   | { type: "START_GAME"; playerName?: string }
   | { type: "NAVIGATE_TO_NODE"; nodeId: string }
+  | { type: "APPLY_CHOICE_EFFECTS"; effects: ChoiceEffect[] }
   | { type: "ADD_ITEM"; item: string }
   | { type: "TAKE_DAMAGE"; amount: number }
   | { type: "HEAL"; amount: number }

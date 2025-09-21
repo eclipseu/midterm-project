@@ -1,11 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGame } from "../contexts/GameContext";
-import StoryText from "../components/game/StoryText";
+import DialogueBox from "../components/game/DialogueBox";
 import ChoiceList from "../components/game/ChoiceList";
+import JumpscareScreen from "../components/game/JumpscareScreen";
 import Inventory from "../components/game/Inventory";
 import StatBar from "../components/ui/StatBar";
-import Button from "../components/ui/Button";
 import type { Choice } from "../types/game.d";
 
 export const GameScreen = () => {
@@ -20,6 +20,15 @@ export const GameScreen = () => {
   } = useGame();
 
   const currentNode = getCurrentNode();
+
+  // Dialogue flow state
+  const [showDialogue, setShowDialogue] = useState(true);
+  const [showChoices, setShowChoices] = useState(false);
+  const [showJumpscare, setShowJumpscare] = useState(false);
+  const [jumpscareAsset, setJumpscareAsset] = useState<string | undefined>(
+    undefined
+  );
+  const [showInventoryModal, setShowInventoryModal] = useState(false);
 
   // Auto-save when game state changes
   useEffect(() => {
@@ -42,12 +51,52 @@ export const GameScreen = () => {
       return;
     }
 
-    dispatch({ type: "NAVIGATE_TO_NODE", nodeId: choice.to });
+    // Apply choice effects first
+    if (choice.effects && choice.effects.length > 0) {
+      dispatch({ type: "APPLY_CHOICE_EFFECTS", effects: choice.effects });
+    }
+
+    // Check if choice will reduce HP (trigger jumpscare)
+    const willReduceHP = choice.effects?.some(
+      (effect) => effect.type === "hp" && Number(effect.value) < 0
+    );
+
+    if (willReduceHP) {
+      // Set jumpscare asset if available in choice
+      setJumpscareAsset(choice.jumpscareAsset);
+      setShowJumpscare(true);
+
+      // Navigate after jumpscare completes
+      setTimeout(() => {
+        dispatch({ type: "NAVIGATE_TO_NODE", nodeId: choice.to });
+        setShowDialogue(true);
+        setShowChoices(false);
+      }, 2500);
+    } else {
+      // Normal navigation
+      dispatch({ type: "NAVIGATE_TO_NODE", nodeId: choice.to });
+      setShowDialogue(true);
+      setShowChoices(false);
+    }
   };
 
-  const handleResetGame = () => {
-    dispatch({ type: "RESET_GAME" });
+  const handleDialogueComplete = () => {
+    setShowDialogue(false);
+    setShowChoices(true);
   };
+
+  const handleJumpscareComplete = () => {
+    setShowJumpscare(false);
+  };
+
+  // Reset dialogue flow when node changes
+  useEffect(() => {
+    if (currentNode) {
+      setShowDialogue(true);
+      setShowChoices(false);
+      setShowJumpscare(false);
+    }
+  }, [gameState.currentNodeId]);
 
   if (!gameState.gameStarted) {
     // Redirect to start screen if game hasn't been started
@@ -56,104 +105,119 @@ export const GameScreen = () => {
   }
 
   return (
-    <div className="min-h-screen bg-dark text-pale-text font-serif">
-      {/* Header with player info */}
-      <header className="bg-gray-900 shadow-lg border-b border-gray-700">
-        <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h1 className="text-2xl font-bold text-pale-text font-elegant">
-                {gameState.player.name}'s Adventure
-              </h1>
-              <p className="text-sm text-pale-text-muted">
-                San Gubat Chronicles
-              </p>
-            </div>
+    <div className="game-screen-container">
+      {/* Jumpscare Screen Overlay */}
+      <JumpscareScreen
+        isVisible={showJumpscare}
+        onComplete={handleJumpscareComplete}
+        jumpscareAsset={jumpscareAsset}
+        intensity="high"
+        duration={2000}
+      />
 
-            {/* Health bar */}
-            <div className="w-full sm:w-64">
-              <StatBar
-                label="Health"
-                current={gameState.player.hp}
-                max={gameState.player.maxHp}
-              />
-            </div>
-          </div>
+      {/* HP Bar - Top Left */}
+      <div className="hp-container">
+        <StatBar
+          label="Health"
+          current={gameState.player.hp}
+          max={gameState.player.maxHp}
+          className="hp-bar-horror"
+        />
+        <div className="hp-text">
+          {gameState.player.hp}/{gameState.player.maxHp} HP
         </div>
-      </header>
+      </div>
 
-      {/* Main game content */}
-      <main className="max-w-6xl mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Story and choices - main content area */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Story text */}
-            <div className="bg-gray-800 border border-gray-700 rounded-lg shadow-lg p-6 h-96 overflow-y-auto">
-              <StoryText node={currentNode} />
+      {/* Inventory Icon - Top Right */}
+      <div
+        className="inventory-icon"
+        onClick={() => setShowInventoryModal(true)}
+      >
+        <div className="cursed-chest">
+          <span className="chest-glow">📦</span>
+          {gameState.player.inventory.length > 0 && (
+            <div className="item-count">
+              {gameState.player.inventory.length}
             </div>
+          )}
+        </div>
+      </div>
 
-            {/* Choices */}
-            <div className="bg-gray-800 border border-gray-700 rounded-lg shadow-lg p-6">
-              {currentNode?.choices && (
-                <ChoiceList
-                  choices={currentNode.choices}
-                  onChoiceSelect={handleChoiceSelect}
-                  canSelectChoice={canSelectChoice}
-                  shouldHideChoice={shouldHideChoice}
-                />
-              )}
+      {/* Character Art - Center */}
+      <div className="character-container">
+        <img
+          src="https://placehold.co/400x600/1a1a1a/666?text=Character"
+          alt="Character Portrait"
+          className="character-image"
+        />
+      </div>
+
+      {/* Dialogue Box - Bottom */}
+      {showDialogue && currentNode && (
+        <div className="dialogue-container">
+          <DialogueBox
+            node={currentNode}
+            onDialogueComplete={handleDialogueComplete}
+            className="horror-dialogue-box"
+          />
+        </div>
+      )}
+
+      {/* Choice List - Above Dialogue */}
+      {showChoices && currentNode?.choices && (
+        <div className="choices-container">
+          <ChoiceList
+            choices={currentNode.choices}
+            onChoiceSelect={handleChoiceSelect}
+            canSelectChoice={canSelectChoice}
+            shouldHideChoice={shouldHideChoice}
+            className="horror-choices"
+          />
+        </div>
+      )}
+
+      {/* Progress Info - Footer */}
+      <div className="progress-footer">
+        <div className="location-icons">
+          {Array.from(gameState.visitedNodes)
+            .slice(0, 6)
+            .map((nodeId, index) => (
+              <div key={nodeId} className="location-icon">
+                {index % 3 === 0 ? "🕯️" : index % 3 === 1 ? "💀" : "🔮"}
+              </div>
+            ))}
+        </div>
+        <div className="current-location">
+          Current: {gameState.currentNodeId}
+        </div>
+      </div>
+
+      {/* Inventory Modal */}
+      {showInventoryModal && (
+        <div
+          className="inventory-modal-overlay"
+          onClick={() => setShowInventoryModal(false)}
+        >
+          <div
+            className="inventory-modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="modal-header">
+              <h3>Cursed Inventory</h3>
+              <button
+                className="close-button"
+                onClick={() => setShowInventoryModal(false)}
+              >
+                ✕
+              </button>
             </div>
-          </div>
-
-          {/* Sidebar with inventory and game info */}
-          <div className="space-y-6">
-            {/* Inventory */}
             <Inventory
               items={gameState.player.inventory}
               playerName={gameState.player.name}
             />
-
-            {/* Game progress info */}
-            <div className="bg-gray-800 border border-gray-700 rounded-lg shadow-lg p-4">
-              <h3 className="text-lg font-semibold text-pale-text mb-3 font-elegant">
-                Progress
-              </h3>
-              <div className="space-y-2 text-sm text-pale-text-muted">
-                <div className="flex justify-between">
-                  <span>Locations explored:</span>
-                  <span className="font-medium text-pale-text">
-                    {gameState.visitedNodes.size}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Items found:</span>
-                  <span className="font-medium text-pale-text">
-                    {gameState.player.inventory.length}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Current location:</span>
-                  <span className="font-medium text-red-accent">
-                    {gameState.currentNodeId}
-                  </span>
-                </div>
-              </div>
-
-              {/* Game controls */}
-              <div className="mt-4 pt-4 border-t border-gray-700">
-                <Button
-                  onClick={handleResetGame}
-                  variant="secondary"
-                  size="small"
-                  className="w-full"
-                >
-                  Restart Adventure
-                </Button>
-              </div>
-            </div>
           </div>
         </div>
-      </main>
+      )}
     </div>
   );
 };

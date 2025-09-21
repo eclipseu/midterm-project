@@ -11,6 +11,28 @@
       href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&family=Cinzel:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <style>
+      /* Critical CSS to prevent white edges and scrolling */
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        width: 100vw;
+        background-color: #000000;
+        overflow: hidden; /* Prevent all scrolling */
+        position: fixed; /* Lock viewport */
+      }
+      #root {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        width: 100vw;
+        background-color: #000000;
+        overflow: hidden; /* Prevent scrolling in React root */
+        position: relative;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>

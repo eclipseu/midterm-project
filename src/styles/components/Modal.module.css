@@ -1,0 +1,209 @@
+/* Modal Component Styles */
+.modal {
+  /* Eerie, black-themed background */
+  background: radial-gradient(circle, #000000 0%, #0d0000 100%);
+  border: 2px solid #8b0000; /* Darker red border for a bloody theme */
+  border-radius: 1rem;
+  /* Use a fluid width that clamps between a min and max size */
+  width: clamp(300px, 90%, 600px);
+  /* Removed max-height and overflow-y to prevent scrollbar */
+  box-shadow: 0 0 15px 4px rgba(139, 0, 0, 0.6); /* Darker, more subtle red glow */
+  /* Fixes the position and centering */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* Ensure the modal is on top of other content */
+  z-index: 1000;
+  /* Add padding to prevent content from touching edges on small screens */
+  padding: 1rem;
+  animation: modal-fade-in 0.3s ease-out, eerie-pulse 5s infinite alternate;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 1.5rem 0;
+  border-bottom: 1px solid rgba(139, 0, 0, 0.3); /* Lighter red divider */
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #8b0000; /* Darker, bloody red title */
+  font-family: var(--font-elegant);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: #8b0000; /* Darker red close button */
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.closeButton:hover {
+  background: rgba(139, 0, 0, 0.2);
+  color: #b22222;
+  transform: scale(1.1);
+}
+
+.closeButton:active {
+  transform: scale(0.95);
+}
+
+.closeIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  transition: transform 0.2s ease;
+}
+
+.closeButton:hover .closeIcon {
+  transform: rotate(90deg);
+}
+
+.content {
+  padding: 0 1.5rem 1.5rem;
+  color: #e5e5e5; /* Changed to off-white for better readability */
+  line-height: 1.6;
+  font-family: var(--font-body);
+}
+
+.content h2 {
+  color: #8b0000; /* Darker red for headings */
+  font-family: var(--font-elegant);
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.content h3 {
+  color: #8b0000;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.content p {
+  margin-bottom: 1rem;
+}
+
+.content ul {
+  margin: 0.5rem 0 1rem 1.5rem;
+  list-style-type: none;
+}
+
+.content li {
+  margin-bottom: 0.5rem;
+  position: relative;
+  padding-left: 1rem;
+}
+
+.content li::before {
+  content: "▶";
+  position: absolute;
+  left: 0;
+  color: #8b0000; /* Darker red marker */
+  font-size: 0.8rem;
+}
+
+.content strong {
+  color: #8b0000; /* Darker red for strong text */
+  font-weight: 600;
+}
+
+.content code {
+  background: rgba(139, 0, 0, 0.1);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-family: monospace;
+  color: #8b0000;
+  border: 1px solid rgba(139, 0, 0, 0.2);
+}
+
+/* Modal animations */
+@keyframes modal-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes eerie-pulse {
+  0% {
+    box-shadow: 0 0 15px 4px rgba(139, 0, 0, 0.6);
+    border-color: #8b0000;
+  }
+  50% {
+    box-shadow: 0 0 20px 6px rgba(139, 0, 0, 0.8);
+    border-color: #8b0000;
+  }
+  100% {
+    box-shadow: 0 0 15px 4px rgba(139, 0, 0, 0.6);
+    border-color: #8b0000;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modal {
+    margin: 1rem;
+  }
+
+  .header {
+    padding: 1rem 1rem 0;
+    margin-bottom: 1rem;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  .content {
+    padding: 0 1rem 1rem;
+  }
+
+  .closeButton {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .closeIcon {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal {
+    margin: 0.5rem;
+  }
+
+  .title {
+    font-size: 1.1rem;
+  }
+
+  .content h2 {
+    font-size: 1.1rem;
+  }
+
+  .content h3 {
+    font-size: 1rem;
+  }
+}

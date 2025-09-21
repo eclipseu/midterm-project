@@ -125,6 +125,52 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
         },
       };
 
+    case "APPLY_CHOICE_EFFECTS":
+      let effectState = { ...state };
+
+      action.effects.forEach((effect) => {
+        switch (effect.type) {
+          case "hp":
+            const hpChange = Number(effect.value);
+            const currentHp = effectState.player.hp;
+            const newHp = Math.max(
+              0,
+              Math.min(effectState.player.maxHp, currentHp + hpChange)
+            );
+            const isDead = newHp <= 0;
+
+            effectState = {
+              ...effectState,
+              player: {
+                ...effectState.player,
+                hp: newHp,
+              },
+              isGameOver: isDead,
+              currentNodeId: isDead ? "gameOver_hp" : effectState.currentNodeId,
+            };
+            break;
+
+          case "item":
+            const item = String(effect.value);
+            if (!effectState.player.inventory.includes(item)) {
+              effectState = {
+                ...effectState,
+                player: {
+                  ...effectState.player,
+                  inventory: [...effectState.player.inventory, item],
+                },
+              };
+            }
+            break;
+
+          case "flag":
+            // Handle game flags if needed in the future
+            break;
+        }
+      });
+
+      return effectState;
+
     case "END_GAME":
       return {
         ...state,

@@ -42,6 +42,17 @@
       {
         "text": "Inspect the altar at the far end of the church.",
         "to": "altar"
+      },
+      {
+        "text": "Touch the mysterious dark stain on the floor (Warning: Dangerous)",
+        "to": "darkStain",
+        "effects": [
+          {
+            "type": "hp",
+            "value": -15
+          }
+        ],
+        "jumpscareAsset": "/assets/aswang-jumpscare.jpg"
       }
     ]
   },
@@ -180,5 +191,18 @@
   "gameOver_hp": {
     "text": "Your wounds are too severe. You collapse, and the darkness consumes you. Your hunt ends in failure. GAME OVER.",
     "isEnding": true
+  },
+  "darkStain": {
+    "text": "As your fingers touch the dark stain, a violent vision flashes through your mind! You see the Aswang's feeding ground, its victims' blood soaking into the stone. The psychic shock leaves you weakened and shaken, but you now know where to find the creature.",
+    "choices": [
+      {
+        "text": "Steel yourself and continue your hunt, despite your wounds.",
+        "to": "bellTower"
+      },
+      {
+        "text": "Retreat to recover and gather more information.",
+        "to": "askCaptain"
+      }
+    ]
   }
 }

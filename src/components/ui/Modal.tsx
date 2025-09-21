@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import type { ReactNode } from "react";
+import styles from "../../styles/components/Modal.module.css";
 
 interface ModalProps {
   isOpen: boolean;
@@ -61,43 +62,33 @@ export const Modal = ({
   if (!isOpen) return null;
 
   const sizeClasses = {
-    small: "max-w-xs",
-    medium: "max-w-md",
-    large: "max-w-xl",
+    small: "max-w-sm",
+    medium: "max-w-lg",
+    large: "max-w-2xl",
     full: "max-w-full mx-2",
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 animate-pulse-slow">
+    <div className={styles.overlay}>
       {/* The encroaching void */}
       <div
-        className="absolute inset-0 bg-black/90 animate-fade-in-slow"
+        className={styles.overlay}
         onClick={handleOverlayClick}
         aria-hidden="true"
       />
 
       {/* The maw of the abyss */}
       <div
-        className={`
-          relative w-full ${sizeClasses[size]} mx-4 max-h-[95vh] 
-          bg-gray-950 border border-red-900 
-          transform transition-all duration-300 ease-in
-          animate-shudder
-          drop-shadow-[0_0_15px_rgba(255,0,0,0.5)] 
-          ${className}
-        `}
+        className={`${styles.modal} ${sizeClasses[size]} ${className}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? "modal-title" : undefined}
       >
         {/* A grim whisper, a cold gaze */}
         {(title || showCloseButton) && (
-          <div className="flex items-center justify-between p-4 border-b border-red-900">
+          <div className={styles.header}>
             {title && (
-              <h2
-                id="modal-title"
-                className="text-lg font-mono text-gray-500 tracking-wider"
-              >
+              <h2 id="modal-title" className={styles.title}>
                 {title}
               </h2>
             )}
@@ -105,11 +96,11 @@ export const Modal = ({
             {showCloseButton && (
               <button
                 onClick={onClose}
-                className="ml-auto p-1 text-gray-700 hover:text-red-600 transition-colors duration-200 rounded-full focus:outline-none"
+                className={styles.closeButton}
                 aria-label="Close modal"
               >
                 <svg
-                  className="w-6 h-6"
+                  className={styles.closeIcon}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -127,9 +118,7 @@ export const Modal = ({
         )}
 
         {/* The dreadful truth within */}
-        <div className="p-4 overflow-y-auto max-h-[calc(90vh-8rem)]">
-          {children}
-        </div>
+        <div className={styles.content}>{children}</div>
       </div>
     </div>
   );

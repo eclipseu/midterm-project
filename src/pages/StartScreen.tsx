@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGame } from "../contexts/GameContext";
 import { hasSavedGame } from "../services/persistence";
-import Button from "../components/ui/Button";
+import Modal from "../components/ui/Modal";
+import styles from "../styles/components/StartScreen.module.css";
 
 export const StartScreen = () => {
   const navigate = useNavigate();
@@ -16,6 +17,8 @@ export const StartScreen = () => {
     timestamp: number;
     location: string;
   } | null>(null);
+  const [showTutorial, setShowTutorial] = useState(false);
+  const [showCredits, setShowCredits] = useState(false);
 
   // Check for existing saved game on component mount
   useEffect(() => {
@@ -90,113 +93,265 @@ export const StartScreen = () => {
   };
 
   return (
-    <div className="min-h-screen bg-dark flex items-center justify-center p-4 font-serif">
-      <div className="max-w-md w-full">
-        {/* Game Title */}
-        <div className="text-center mb-8 animate-fade-in">
-          <h1 className="text-5xl font-title text-red-accent mb-2">
-            San Gubat Chronicles
-          </h1>
-          <p className="text-pale-text text-lg font-elegant">
-            A Filipino Horror Text Adventure
-          </p>
-        </div>
+    <div
+      className={`min-h-screen relative overflow-hidden ${styles.menuBackground}`}
+    >
+      {/* Animated Background */}
+      <div className="absolute inset-0">
+        <div className={styles.backgroundOverlay}></div>
+        <div className={styles.scanlines}></div>
+        <div className={styles.vignette}></div>
+      </div>
 
-        {/* Main Game Start Card */}
-        <div className="bg-gray-800 border border-gray-700 rounded-lg shadow-2xl p-6 mb-6 animate-slide-up">
-          {/* Continue Game Option */}
-          {savedGameExists && savedGameInfo && (
-            <div className="mb-6 p-4 bg-gray-700 border border-gray-600 rounded-lg">
-              <h3 className="text-sm font-semibold text-red-accent mb-2">
-                Continue Previous Game
-              </h3>
-              <div className="text-sm text-pale-text-muted space-y-1">
-                <div>
-                  Player:{" "}
-                  <span className="font-medium text-pale-text">
-                    {savedGameInfo.playerName}
-                  </span>
-                </div>
-                <div>
-                  Location:{" "}
-                  <span className="font-medium text-pale-text">
-                    {savedGameInfo.location}
-                  </span>
-                </div>
-                <div>
-                  Saved:{" "}
-                  <span className="font-medium text-pale-text">
-                    {new Date(savedGameInfo.timestamp).toLocaleDateString()}
-                  </span>
-                </div>
-              </div>
-              <Button
-                onClick={continueGame}
-                disabled={isLoading}
-                variant="secondary"
-                className="w-full mt-3"
-              >
-                {isLoading ? "Loading..." : "Continue Game"}
-              </Button>
+      {/* Main Menu Container */}
+      <div className="relative z-10 min-h-screen flex">
+        {/* Left Side - Game Logo */}
+        <div className="flex-1 flex items-center justify-center p-8">
+          <div className="text-center">
+            <div className={styles.logoContainer}>
+              <h1 className={styles.mainTitle}>SAN GUBAT</h1>
+              <h2 className={styles.subTitle}>CHRONICLES</h2>
+              <div className={styles.tagline}>A Filipino Horror Experience</div>
             </div>
-          )}
-
-          {/* New Game Form */}
-          <div
-            className={savedGameExists ? "pt-6 border-t border-gray-700" : ""}
-          >
-            <h2 className="text-xl font-semibold text-pale-text mb-4 font-elegant">
-              {savedGameExists ? "Start New Adventure" : "Begin Your Journey"}
-            </h2>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label
-                  htmlFor="playerName"
-                  className="block text-sm font-medium text-pale-text-muted mb-2"
-                >
-                  Enter your name:
-                </label>
-                <input
-                  type="text"
-                  id="playerName"
-                  value={playerName}
-                  onChange={handleNameChange}
-                  placeholder="Your hero's name"
-                  className="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg text-pale-text focus:ring-2 focus:ring-red-accent focus:border-red-accent transition-colors"
-                  maxLength={20}
-                  disabled={isLoading}
-                  autoFocus
-                />
-                <div className="text-xs text-pale-text-muted mt-1">
-                  2-20 characters required
-                </div>
-              </div>
-
-              {error && (
-                <div className="p-3 bg-red-900 border border-red-700 rounded-lg">
-                  <p className="text-red-300 text-sm">{error}</p>
-                </div>
-              )}
-
-              <Button
-                type="submit"
-                disabled={isLoading || !playerName || playerName.length < 2}
-                variant="primary"
-                size="large"
-                className="w-full"
-              >
-                {isLoading ? "Starting..." : "Start Adventure"}
-              </Button>
-            </form>
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="text-center mt-6 text-pale-text-muted text-xs">
-          © 2025 San Gubat Chronicles - A Text Adventure Experience
+        {/* Right Side - Menu Options */}
+        <div className="w-96 p-8 flex flex-col justify-center">
+          <div className={styles.menuContainer}>
+            {/* Continue Game Option */}
+            {savedGameExists && savedGameInfo && (
+              <div className={`${styles.menuSection} mb-8`}>
+                <div className={styles.continueBox}>
+                  <div className="text-orange-400 font-bold text-sm mb-2">
+                    CONTINUE GAME
+                  </div>
+                  <div className="text-white text-sm space-y-1">
+                    <div>
+                      Player:{" "}
+                      <span className="text-yellow-300">
+                        {savedGameInfo.playerName}
+                      </span>
+                    </div>
+                    <div>
+                      Location:{" "}
+                      <span className="text-yellow-300">
+                        {savedGameInfo.location}
+                      </span>
+                    </div>
+                    <div>
+                      Saved:{" "}
+                      <span className="text-yellow-300">
+                        {new Date(savedGameInfo.timestamp).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={continueGame}
+                    disabled={isLoading}
+                    className={`${styles.menuButton} ${styles.continueButton} w-full mt-3`}
+                  >
+                    {isLoading ? "LOADING..." : "CONTINUE"}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* New Game Section */}
+            <div className={styles.menuSection}>
+              <div className={styles.newGameTitle}>
+                {savedGameExists ? "NEW GAME" : "START GAME"}
+              </div>
+
+              {/* Player Name Input */}
+              <form onSubmit={handleSubmit}>
+                <div className="mb-4">
+                  <label className={styles.inputLabel}>ENTER NAME:</label>
+                  <input
+                    type="text"
+                    value={playerName}
+                    onChange={handleNameChange}
+                    placeholder="PLAYER NAME"
+                    className={styles.textInput}
+                    maxLength={20}
+                    disabled={isLoading}
+                    autoFocus
+                  />
+                  <div className={styles.inputHint}>2-20 CHARACTERS</div>
+                </div>
+
+                {error && (
+                  <div className={`${styles.errorBox} mb-4`}>
+                    {error.toUpperCase()}
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={isLoading || !playerName || playerName.length < 2}
+                  className={`${styles.menuButton} ${styles.startButton} w-full mb-6`}
+                >
+                  {isLoading ? "STARTING..." : "START ADVENTURE"}
+                </button>
+              </form>
+            </div>
+
+            {/* Menu Buttons */}
+            <div className="space-y-3">
+              <button
+                onClick={() => setShowTutorial(true)}
+                className={`${styles.menuButton} ${styles.secondaryButton} w-full`}
+                type="button"
+              >
+                HOW TO PLAY
+              </button>
+
+              <button
+                onClick={() => setShowCredits(true)}
+                className={`${styles.menuButton} ${styles.secondaryButton} w-full`}
+                type="button"
+              >
+                CREDITS
+              </button>
+
+              <a
+                href="https://github.com/eclipseu/midterm-project"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`${styles.menuButton} ${styles.githubButton} w-full block text-center`}
+              >
+                VIEW ON GITHUB
+              </a>
+            </div>
+
+            {/* Copyright */}
+            <div className={styles.copyright}>© 2025 SAN GUBAT CHRONICLES</div>
+          </div>
         </div>
       </div>
+
+      {/* Tutorial Modal */}
+      <Modal
+        isOpen={showTutorial}
+        onClose={() => setShowTutorial(false)}
+        title="How to Play"
+        size="large"
+        showCloseButton={true}
+      >
+        <div className="space-y-4">
+          <div className="space-y-4 text-pale-text">
+            <div>
+              <h3 className="font-semibold text-pale-text mb-2">
+                Reading the Story
+              </h3>
+              <p className="text-sm text-pale-text-muted">
+                Each scene presents you with a story segment. Take your time to
+                read and immerse yourself in the Filipino horror atmosphere.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-pale-text mb-2">
+                Making Choices
+              </h3>
+              <p className="text-sm text-pale-text-muted">
+                Click the arrow button to proceed through dialogue, then choose
+                from available options. Your choices affect the story outcome.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-pale-text mb-2">
+                Health System
+              </h3>
+              <p className="text-sm text-pale-text-muted">
+                Monitor your HP bar. Some choices may trigger jump scares and
+                reduce your health. Reach 0 HP and it's game over!
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-pale-text mb-2">Inventory</h3>
+              <p className="text-sm text-pale-text-muted">
+                Collect items during your adventure. They may help you in
+                crucial moments or reveal important story elements.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-pale-text mb-2"> Saving</h3>
+              <p className="text-sm text-pale-text-muted">
+                Your progress is automatically saved. You can continue your
+                adventure anytime from where you left off.
+              </p>
+            </div>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Credits Modal */}
+      <Modal
+        isOpen={showCredits}
+        onClose={() => setShowCredits(false)}
+        title="Credits"
+        size="large"
+        showCloseButton={true}
+      >
+        <div className="space-y-4">
+          <div className="space-y-6 text-pale-text">
+            <div>
+              <h3 className="font-semibold text-pale-text mb-2">
+                Game Development
+              </h3>
+              <p className="text-sm text-pale-text-muted">
+                Created as a midterm project showcasing interactive storytelling
+                and web development skills.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-pale-text mb-2">
+                Cultural Heritage
+              </h3>
+              <p className="text-sm text-pale-text-muted">
+                Inspired by rich Filipino folklore and the mystical creatures
+                that have been part of our culture for centuries.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-pale-text mb-2">
+                Technology Stack
+              </h3>
+              <ul className="text-sm text-pale-text-muted space-y-1">
+                <li>• React 19 with TypeScript</li>
+                <li>• Vite for fast development</li>
+                <li>• Tailwind CSS for styling</li>
+                <li>• React Router for navigation</li>
+                <li>• Context API for state management</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-pale-text mb-2">
+                Design Elements
+              </h3>
+              <ul className="text-sm text-pale-text-muted space-y-1">
+                <li>• Google Fonts (Uncial Antiqua, Cinzel, Inter)</li>
+                <li>• Lucide React icons</li>
+                <li>• Custom horror-themed UI components</li>
+                <li>• Responsive design principles</li>
+              </ul>
+            </div>
+
+            <div className="pt-4 border-t border-gray-700">
+              <p className="text-sm text-pale-text-muted text-center">
+                Thank you for playing San Gubat Chronicles!
+              </p>
+            </div>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
