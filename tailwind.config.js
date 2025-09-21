@@ -4,7 +4,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Custom colors for the horror theme
+        // Updated color scheme with dark background and red accents
+        dark: "#111111",
+        "red-accent": "#b91c1c",
+        "pale-text": "#e5e7eb",
+        "pale-text-muted": "#9ca3af",
+        // Horror theme colors (keeping for backward compatibility)
         "horror-red": {
           50: "#fef2f2",
           100: "#fee2e2",
@@ -31,6 +36,8 @@ export default {
         },
       },
       fontFamily: {
+        title: ["Uncial Antiqua", "serif"],
+        elegant: ["Cinzel", "serif"],
         horror: ["Creepster", "cursive"],
         serif: ["Merriweather", "serif"],
       },

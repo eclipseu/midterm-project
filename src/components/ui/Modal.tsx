@@ -24,7 +24,7 @@ export const Modal = ({
   showCloseButton = true,
   className = "",
 }: ModalProps) => {
-  // Handle escape key press
+  // Silence the living, a chilling presence
   useEffect(() => {
     if (!isOpen || !closeOnEscape) return;
 
@@ -38,7 +38,7 @@ export const Modal = ({
     return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, closeOnEscape, onClose]);
 
-  // Prevent body scroll when modal is open
+  // A dark shroud descends, a gasp stolen
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -46,59 +46,57 @@ export const Modal = ({
       document.body.style.overflow = "unset";
     }
 
-    // Cleanup on unmount
     return () => {
       document.body.style.overflow = "unset";
     };
   }, [isOpen]);
 
-  // Handle overlay click
+  // Don't turn your back on the shadows...
   const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (event.target === event.currentTarget && closeOnOverlayClick) {
       onClose();
     }
   };
 
-  // Don't render if not open
   if (!isOpen) return null;
 
-  // Size classes
   const sizeClasses = {
-    small: "max-w-md",
-    medium: "max-w-lg",
-    large: "max-w-2xl",
-    full: "max-w-full mx-4",
+    small: "max-w-xs",
+    medium: "max-w-md",
+    large: "max-w-xl",
+    full: "max-w-full mx-2",
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Backdrop */}
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 animate-pulse-slow">
+      {/* The encroaching void */}
       <div
-        className="absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ease-out"
+        className="absolute inset-0 bg-black/90 animate-fade-in-slow"
         onClick={handleOverlayClick}
         aria-hidden="true"
       />
 
-      {/* Modal Container */}
+      {/* The maw of the abyss */}
       <div
         className={`
-          relative w-full ${sizeClasses[size]} mx-4 max-h-[90vh] 
-          bg-white rounded-lg shadow-2xl 
-          transform transition-all duration-300 ease-out
-          animate-modal-in
+          relative w-full ${sizeClasses[size]} mx-4 max-h-[95vh] 
+          bg-gray-950 border border-red-900 
+          transform transition-all duration-300 ease-in
+          animate-shudder
+          drop-shadow-[0_0_15px_rgba(255,0,0,0.5)] 
           ${className}
         `}
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? "modal-title" : undefined}
       >
-        {/* Header */}
+        {/* A grim whisper, a cold gaze */}
         {(title || showCloseButton) && (
-          <div className="flex items-center justify-between p-4 border-b border-gray-200">
+          <div className="flex items-center justify-between p-4 border-b border-red-900">
             {title && (
               <h2
                 id="modal-title"
-                className="text-lg font-semibold text-gray-900"
+                className="text-lg font-mono text-gray-500 tracking-wider"
               >
                 {title}
               </h2>
@@ -107,7 +105,7 @@ export const Modal = ({
             {showCloseButton && (
               <button
                 onClick={onClose}
-                className="ml-auto p-1 text-gray-400 hover:text-gray-600 transition-colors duration-200 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="ml-auto p-1 text-gray-700 hover:text-red-600 transition-colors duration-200 rounded-full focus:outline-none"
                 aria-label="Close modal"
               >
                 <svg
@@ -128,7 +126,7 @@ export const Modal = ({
           </div>
         )}
 
-        {/* Content */}
+        {/* The dreadful truth within */}
         <div className="p-4 overflow-y-auto max-h-[calc(90vh-8rem)]">
           {children}
         </div>
@@ -137,7 +135,7 @@ export const Modal = ({
   );
 };
 
-// Utility component for modal content sections
+// ... Utility components with horror-themed names and colors ...
 export const ModalContent = ({
   children,
   className = "",
@@ -146,7 +144,6 @@ export const ModalContent = ({
   className?: string;
 }) => <div className={`space-y-4 ${className}`}>{children}</div>;
 
-// Utility component for modal footer with actions
 export const ModalFooter = ({
   children,
   className = "",
@@ -155,13 +152,12 @@ export const ModalFooter = ({
   className?: string;
 }) => (
   <div
-    className={`flex flex-col sm:flex-row gap-2 sm:gap-3 sm:justify-end pt-4 border-t border-gray-200 ${className}`}
+    className={`flex flex-col sm:flex-row gap-2 sm:gap-3 sm:justify-end pt-4 border-t border-red-900 ${className}`}
   >
     {children}
   </div>
 );
 
-// Utility component for modal body text
 export const ModalBody = ({
   children,
   className = "",
@@ -169,7 +165,9 @@ export const ModalBody = ({
   children: ReactNode;
   className?: string;
 }) => (
-  <div className={`text-gray-700 leading-relaxed ${className}`}>{children}</div>
+  <div className={`text-red-100/70 leading-relaxed ${className}`}>
+    {children}
+  </div>
 );
 
 export default Modal;

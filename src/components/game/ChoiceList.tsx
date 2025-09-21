@@ -21,15 +21,17 @@ export const ChoiceList = ({
 
   if (visibleChoices.length === 0) {
     return (
-      <div className={`p-4 bg-gray-50 rounded-lg ${className}`}>
-        <p className="text-gray-500 italic text-center">No choices available</p>
+      <div className={`p-4 bg-gray-700 rounded-lg ${className}`}>
+        <p className="text-pale-text-muted italic text-center">
+          No choices available
+        </p>
       </div>
     );
   }
 
   return (
     <div className={`space-y-3 ${className}`}>
-      <h3 className="text-lg font-semibold text-gray-800 mb-4">
+      <h3 className="text-lg font-semibold text-pale-text mb-4 font-elegant">
         Choose your action:
       </h3>
 
@@ -52,7 +54,7 @@ export const ChoiceList = ({
                 {requiresItem && (
                   <span
                     className={`text-sm mt-1 ${
-                      canSelect ? "text-blue-200" : "text-gray-500"
+                      canSelect ? "text-red-300" : "text-pale-text-muted"
                     }`}
                   >
                     {canSelect
@@ -64,7 +66,7 @@ export const ChoiceList = ({
             </Button>
 
             {/* Visual indicator for choice number */}
-            <div className="absolute left-3 top-3 w-6 h-6 bg-white/20 rounded-full flex items-center justify-center text-xs font-bold">
+            <div className="absolute left-3 top-3 w-6 h-6 bg-red-accent/20 rounded-full flex items-center justify-center text-xs font-bold text-pale-text">
               {index + 1}
             </div>
           </div>
@@ -72,7 +74,7 @@ export const ChoiceList = ({
       })}
 
       {/* Help text */}
-      <div className="mt-4 text-sm text-gray-600">
+      <div className="mt-4 text-sm text-pale-text-muted">
         <p>💡 Some choices may require specific items from your inventory.</p>
       </div>
     </div>

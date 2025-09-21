@@ -8,8 +8,8 @@ interface StoryTextProps {
 export const StoryText = ({ node, className = "" }: StoryTextProps) => {
   if (!node) {
     return (
-      <div className={`p-6 bg-gray-100 rounded-lg ${className}`}>
-        <p className="text-gray-500 italic">Loading story...</p>
+      <div className={`p-6 bg-gray-800 rounded-lg ${className}`}>
+        <p className="text-pale-text-muted italic">Loading story...</p>
       </div>
     );
   }
@@ -24,16 +24,16 @@ export const StoryText = ({ node, className = "" }: StoryTextProps) => {
   const isDefeat = isEnding && !isVictory;
 
   const bgColor = isVictory
-    ? "bg-green-50 border-green-200"
+    ? "bg-green-900 border-green-600"
     : isDefeat
-    ? "bg-red-50 border-red-200"
-    : "bg-white border-gray-200";
+    ? "bg-red-900 border-red-600"
+    : "bg-gray-800 border-gray-600";
 
   const textColor = isVictory
-    ? "text-green-900"
+    ? "text-green-200"
     : isDefeat
-    ? "text-red-900"
-    : "text-gray-900";
+    ? "text-red-200"
+    : "text-pale-text";
 
   return (
     <div
@@ -42,14 +42,14 @@ export const StoryText = ({ node, className = "" }: StoryTextProps) => {
       {isEnding && (
         <div
           className={`text-sm font-semibold mb-3 ${
-            isVictory ? "text-green-700" : "text-red-700"
+            isVictory ? "text-green-400" : "text-red-400"
           }`}
         >
           {isVictory ? "🎉 VICTORY!" : "💀 GAME OVER"}
         </div>
       )}
 
-      <div className={`text-lg leading-relaxed ${textColor}`}>
+      <div className={`text-lg leading-relaxed ${textColor} font-serif`}>
         {/* Format the story text with proper paragraph breaks */}
         {node.text.split("\n").map((paragraph, index) => (
           <p
@@ -64,8 +64,8 @@ export const StoryText = ({ node, className = "" }: StoryTextProps) => {
 
       {/* Special ending indicators */}
       {isEnding && (
-        <div className="mt-4 pt-4 border-t border-gray-200">
-          <p className="text-sm text-gray-600 italic">
+        <div className="mt-4 pt-4 border-t border-gray-600">
+          <p className="text-sm text-pale-text-muted italic">
             {isVictory
               ? "Congratulations! You have completed your quest successfully."
               : "Your adventure has come to an end. Try again to discover a different fate."}

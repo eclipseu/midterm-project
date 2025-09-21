@@ -8,6 +8,8 @@ interface ButtonProps {
   size?: "small" | "medium" | "large";
   className?: string;
   type?: "button" | "submit" | "reset";
+  fullWidth?: boolean;
+  animated?: boolean;
 }
 
 export const Button = ({
@@ -15,32 +17,40 @@ export const Button = ({
   onClick,
   disabled = false,
   variant = "primary",
-  size = "medium",
+  size = "large",
   className = "",
   type = "button",
+  fullWidth = true,
+  animated = true,
 }: ButtonProps) => {
-  const baseClasses =
-    "font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2";
+  // Base classes that apply to all buttons
+  const baseClasses = `font-elegant rounded-lg transition-all duration-300 focus:outline-none focus-horror ${
+    animated ? "transform" : ""
+  } ${fullWidth ? "w-full" : ""}`;
 
+  // Variant styles using horror theme
   const variantClasses = {
     primary:
-      "bg-blue-600 hover:bg-blue-700 text-white focus:ring-blue-500 disabled:bg-gray-400",
+      "btn-horror text-white hover:scale-105 disabled:hover:scale-100 disabled:hover:shadow-none",
     secondary:
-      "bg-gray-200 hover:bg-gray-300 text-gray-900 focus:ring-gray-500 disabled:bg-gray-100",
+      "btn-horror-secondary text-pale-text hover:scale-105 disabled:hover:scale-100",
     danger:
-      "bg-red-600 hover:bg-red-700 text-white focus:ring-red-500 disabled:bg-gray-400",
+      "bg-red-800 hover:bg-red-700 text-white border border-red-700 hover:scale-105 focus:ring-red-500 disabled:bg-gray-800 disabled:hover:scale-100",
   };
 
+  // Size styles
   const sizeClasses = {
-    small: "px-3 py-1.5 text-sm",
-    medium: "px-4 py-2 text-base",
-    large: "px-6 py-3 text-lg",
+    small: "px-4 py-2 text-sm",
+    medium: "px-6 py-3 text-base",
+    large: "px-8 py-4 text-lg",
   };
 
+  // Disabled state
   const disabledClasses = disabled
-    ? "cursor-not-allowed opacity-50"
+    ? "opacity-60 cursor-not-allowed"
     : "cursor-pointer";
 
+  // Combine all classes
   const classes =
     `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${disabledClasses} ${className}`.trim();
 

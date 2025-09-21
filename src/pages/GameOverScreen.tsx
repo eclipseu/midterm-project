@@ -80,127 +80,75 @@ export const GameOverScreen = () => {
   const gameOverInfo = getGameOverReason();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-900 via-gray-900 to-black flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-red-900 via-gray-900 to-dark flex items-center justify-center p-4 font-serif animate-fade-in">
       <div className="max-w-2xl w-full">
         {/* Main Game Over Card */}
-        <div className="bg-white rounded-lg shadow-2xl overflow-hidden">
+        <div className="bg-gray-800 border border-gray-700 rounded-lg shadow-2xl overflow-hidden animate-slide-up">
           {/* Header */}
-          <div className="bg-red-600 text-white p-6 text-center">
-            <div className="text-6xl mb-4">💀</div>
-            <h1 className="text-3xl font-bold mb-2">GAME OVER</h1>
-            <div
-              className={`text-xl font-semibold ${gameOverInfo.color.replace(
-                "text-",
-                "text-red-"
-              )}`}
-            >
-              {gameOverInfo.title}
-            </div>
-            <p className="text-red-100 mt-2">{gameOverInfo.message}</p>
+          <div className="bg-red-800 text-white p-6 text-center">
+            <div className="text-6xl mb-4 animate-pulse-slow">💀</div>
+            <h1 className="text-4xl font-title text-white mb-2">GAME OVER</h1>
+            <p className="text-red-200 mt-2 font-elegant">
+              {gameOverInfo.message}
+            </p>
           </div>
 
           {/* Player Info */}
-          <div className="p-6 bg-gray-50 border-b">
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+          <div className="p-6 bg-gray-700 border-b border-gray-600">
+            <h2 className="text-xl font-semibold text-pale-text mb-2 font-elegant">
               {finalStats.playerName}'s Final Moment
             </h2>
-            <p className="text-gray-600">
+            <p className="text-pale-text-muted">
               Your journey through San Gubat ended at:{" "}
-              <span className="font-medium">{finalStats.currentLocation}</span>
+              <span className="font-medium text-red-accent">
+                {finalStats.currentLocation}
+              </span>
             </p>
           </div>
 
           {/* Final Statistics */}
           <div className="p-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+            <h3 className="text-lg font-semibold text-pale-text mb-4 font-elegant">
               Adventure Statistics
             </h3>
 
             <div className="grid grid-cols-2 gap-4 mb-6">
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className="text-2xl font-bold text-blue-600">
+              <div className="bg-gray-700 rounded-lg p-4">
+                <div className="text-2xl font-bold text-blue-400">
                   {finalStats.locationsVisited}
                 </div>
-                <div className="text-sm text-gray-600">Locations Explored</div>
+                <div className="text-sm text-pale-text-muted">
+                  Locations Explored
+                </div>
               </div>
 
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className="text-2xl font-bold text-green-600">
+              <div className="bg-gray-700 rounded-lg p-4">
+                <div className="text-2xl font-bold text-green-400">
                   {finalStats.itemsCollected}
                 </div>
-                <div className="text-sm text-gray-600">Items Collected</div>
+                <div className="text-sm text-pale-text-muted">
+                  Items Collected
+                </div>
               </div>
 
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className="text-2xl font-bold text-red-600">
+              <div className="bg-gray-700 rounded-lg p-4">
+                <div className="text-2xl font-bold text-red-400">
                   {finalStats.finalHealth}/{finalStats.maxHealth}
                 </div>
-                <div className="text-sm text-gray-600">Final Health</div>
+                <div className="text-sm text-pale-text-muted">Final Health</div>
               </div>
 
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className="text-2xl font-bold text-purple-600">
+              <div className="bg-gray-700 rounded-lg p-4">
+                <div className="text-2xl font-bold text-purple-400">
                   {finalStats.damageReceived}
                 </div>
-                <div className="text-sm text-gray-600">Damage Taken</div>
+                <div className="text-sm text-pale-text-muted">Damage Taken</div>
               </div>
-            </div>
-
-            {/* Inventory Display */}
-            {finalStats.itemsCollected > 0 && (
-              <div className="mb-6">
-                <h4 className="text-md font-semibold text-gray-700 mb-2">
-                  Items in Possession:
-                </h4>
-                <div className="flex flex-wrap gap-2">
-                  {gameState.player.inventory.map((item, index) => (
-                    <span
-                      key={`${item}-${index}`}
-                      className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium"
-                    >
-                      {item}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Death Analysis */}
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-              <h4 className="text-md font-semibold text-red-800 mb-2">
-                What Went Wrong?
-              </h4>
-              {gameState.player.hp <= 0 ? (
-                <p className="text-red-700 text-sm">
-                  Your health reached zero. In future adventures, be more
-                  cautious with your choices and try to find healing items or
-                  avoid dangerous situations.
-                </p>
-              ) : (
-                <p className="text-red-700 text-sm">
-                  Your quest ended without achieving victory. Different choices
-                  might lead to different outcomes. The creatures of San Gubat
-                  are cunning - choose your path wisely.
-                </p>
-              )}
-            </div>
-
-            {/* Encouragement */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-              <h4 className="text-md font-semibold text-blue-800 mb-2">
-                Try Again!
-              </h4>
-              <p className="text-blue-700 text-sm">
-                Every choice matters in San Gubat. Different paths lead to
-                different fates. Will you gather the right items? Can you avoid
-                the deadly traps? Start a new adventure and discover what you
-                might have missed!
-              </p>
             </div>
           </div>
 
           {/* Actions */}
-          <div className="p-6 bg-gray-50 border-t">
+          <div className="p-6 bg-gray-900 border-t border-gray-700">
             <div className="flex flex-col sm:flex-row gap-3">
               <Button
                 onClick={handlePlayAgain}
@@ -221,19 +169,7 @@ export const GameOverScreen = () => {
                 🏠 Main Menu
               </Button>
             </div>
-
-            <div className="text-center mt-4 text-sm text-gray-500">
-              Don't give up! The secrets of San Gubat await your return.
-            </div>
           </div>
-        </div>
-
-        {/* Footer Quote */}
-        <div className="text-center mt-6 text-gray-300">
-          <p className="italic text-lg mb-2">
-            "In the darkness of San Gubat, death is but another teacher."
-          </p>
-          <p className="text-sm text-gray-400">- Filipino Folk Wisdom</p>
         </div>
       </div>
     </div>
