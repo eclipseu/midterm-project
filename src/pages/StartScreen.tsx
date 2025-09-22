@@ -104,9 +104,9 @@ export const StartScreen = () => {
       </div>
 
       {/* Main Menu Container */}
-      <div className="relative z-10 min-h-screen flex">
+      <div className="relative z-10 flex items-center justify-center w-full max-w-5xl mx-auto px-6">
         {/* Left Side - Game Logo */}
-        <div className="flex-1 flex items-center justify-center p-8">
+        <div className="w-[28rem] max-w-full flex items-center justify-center p-8">
           <div className="text-center">
             <div className={styles.logoContainer}>
               <h1 className={styles.mainTitle}>SAN GUBAT</h1>
@@ -117,16 +117,16 @@ export const StartScreen = () => {
         </div>
 
         {/* Right Side - Menu Options */}
-        <div className="w-96 p-8 flex flex-col justify-center">
+        <div className="w-96 p-8 flex flex-col justify-center items-center text-center">
           <div className={styles.menuContainer}>
             {/* Continue Game Option */}
             {savedGameExists && savedGameInfo && (
               <div className={`${styles.menuSection} mb-8`}>
                 <div className={styles.continueBox}>
-                  <div className="text-orange-400 font-bold text-sm mb-2">
+                  <div className="text-orange-400 font-bold text-sm mb-2 text-center">
                     CONTINUE GAME
                   </div>
-                  <div className="text-white text-sm space-y-1">
+                  <div className="text-white text-sm space-y-1 text-center">
                     <div>
                       Player:{" "}
                       <span className="text-yellow-300">
@@ -164,46 +164,54 @@ export const StartScreen = () => {
               </div>
 
               {/* Player Name Input */}
-              <form onSubmit={handleSubmit}>
-                <div className="mb-4">
-                  <label className={styles.inputLabel}>ENTER NAME:</label>
+              <form onSubmit={handleSubmit} className={styles.formGroup}>
+                <div className="mb-2 w-full text-center">
+                  <label
+                    className={`${styles.inputLabel} ${styles.invisibleLabel} block mb-2`}
+                  >
+                    ENTER NAME:
+                  </label>
                   <input
                     type="text"
                     value={playerName}
                     onChange={handleNameChange}
-                    placeholder="PLAYER NAME"
-                    className={styles.textInput}
+                    placeholder="WHISPER YOUR NAME..."
+                    className={`${styles.textInput} w-full text-center`}
                     maxLength={20}
                     disabled={isLoading}
                     autoFocus
                   />
-                  <div className={styles.inputHint}>2-20 CHARACTERS</div>
+                  <div className={`${styles.inputHint} mt-2 text-xs`}>
+                    2–20 CHARACTERS
+                  </div>
                 </div>
+              </form>
 
+              <div className={styles.buttonGroup}>
                 {error && (
-                  <div className={`${styles.errorBox} mb-4`}>
+                  <div className={`${styles.errorBox}`}>
                     {error.toUpperCase()}
                   </div>
                 )}
-
                 <button
-                  type="submit"
+                  type="button"
+                  onClick={startNewGame}
                   disabled={isLoading || !playerName || playerName.length < 2}
-                  className={`${styles.menuButton} ${styles.startButton} w-full mb-6`}
+                  className={`${styles.menuButton} ${styles.startButton}`}
                 >
-                  {isLoading ? "STARTING..." : "START ADVENTURE"}
+                  {isLoading ? "SUMMONING DARKNESS..." : "ENTER THE ABYSS"}
                 </button>
-              </form>
+              </div>
             </div>
 
             {/* Menu Buttons */}
-            <div className="space-y-3">
+            <div className={`${styles.buttonGroup}`}>
               <button
                 onClick={() => setShowTutorial(true)}
                 className={`${styles.menuButton} ${styles.secondaryButton} w-full`}
                 type="button"
               >
-                HOW TO PLAY
+                ANCIENT KNOWLEDGE
               </button>
 
               <button
@@ -211,21 +219,21 @@ export const StartScreen = () => {
                 className={`${styles.menuButton} ${styles.secondaryButton} w-full`}
                 type="button"
               >
-                CREDITS
+                SOUL CONTRIBUTORS
               </button>
 
               <a
                 href="https://github.com/eclipseu/midterm-project"
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`${styles.menuButton} ${styles.githubButton} w-full block text-center`}
+                className={`${styles.menuButton} ${styles.githubButton} block text-center`}
               >
-                VIEW ON GITHUB
+                CURSED CODEX
               </a>
             </div>
 
             {/* Copyright */}
-            <div className={styles.copyright}>© 2025 SAN GUBAT CHRONICLES</div>
+            <div className={styles.copyright}>© 2025 FORBIDDEN CHRONICLES</div>
           </div>
         </div>
       </div>
