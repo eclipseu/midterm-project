@@ -50,9 +50,7 @@ export const Inventory = ({
         <h3 className="text-base font-elegant text-pale-text">
           {playerName ? `${playerName}'s Inventory` : "Inventory"}
         </h3>
-        <span className="text-xs text-pale-text-muted bg-gray-700 px-2 py-1 rounded-full">
-          {items.length}
-        </span>
+        <span className="text-xs text-pale-text-muted bg-gray-700 px-2 py-1 rounded-full"></span>
       </div>
 
       {items.length === 0 ? (

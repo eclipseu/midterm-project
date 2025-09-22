@@ -45,7 +45,7 @@ export const StoryText = ({ node, className = "" }: StoryTextProps) => {
             isVictory ? "text-green-400" : "text-red-400"
           }`}
         >
-          {isVictory ? "🎉 VICTORY!" : "💀 GAME OVER"}
+          {isVictory ? "VICTORY!" : "GAME OVER"}
         </div>
       )}
 

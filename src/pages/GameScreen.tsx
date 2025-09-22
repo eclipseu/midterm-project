@@ -5,7 +5,7 @@ import DialogueBox from "../components/game/DialogueBox";
 import ChoiceList from "../components/game/ChoiceList";
 import JumpscareScreen from "../components/game/JumpscareScreen";
 import Inventory from "../components/game/Inventory";
-import StatBar from "../components/ui/StatBar";
+import HeartBar from "../components/ui/HeartBar";
 import type { Choice } from "../types/game.d";
 
 export const GameScreen = () => {
@@ -115,14 +115,9 @@ export const GameScreen = () => {
         duration={2000}
       />
 
-      {/* HP Bar - Top Left */}
+      {/* HP Hearts - Top Left */}
       <div className="hp-container">
-        <StatBar
-          label="Health"
-          current={gameState.player.hp}
-          max={gameState.player.maxHp}
-          className="hp-bar-horror"
-        />
+        <HeartBar current={gameState.player.hp} max={gameState.player.maxHp} />
         <div className="hp-text">
           {gameState.player.hp}/{gameState.player.maxHp} HP
         </div>

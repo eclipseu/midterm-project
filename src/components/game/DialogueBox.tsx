@@ -25,7 +25,7 @@ export const DialogueBox = ({
   };
 
   return (
-    <div className={`dialogue-box card-horror relative ${className}`}>
+    <div className={`dialogue-box relative ${className}`}>
       {/* Arrow Button - Top Right (Inside DialogueBox container) */}
       {showArrow && (
         <button
@@ -38,12 +38,8 @@ export const DialogueBox = ({
       )}
 
       {/* Dialogue Content */}
-      <div className="p-8 h-full flex flex-col justify-center">
-        <div className="max-w-none">
-          <p className="text-lg leading-relaxed text-gray-100 font-body">
-            {node.text}
-          </p>
-        </div>
+      <div className="dialogue-text">
+        <p className="font-body text-justify">{node.text}</p>
       </div>
     </div>
   );

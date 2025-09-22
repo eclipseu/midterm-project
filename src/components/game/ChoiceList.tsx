@@ -31,9 +31,7 @@ export const ChoiceList = ({
 
   return (
     <div className={`space-y-3 ${className}`}>
-      <h3 className="text-lg font-semibold text-pale-text mb-4 font-elegant">
-        Choose your action:
-      </h3>
+      {/* Header intentionally removed for a cleaner, cinematic choice overlay */}
 
       {visibleChoices.map((choice, index) => {
         const canSelect = canSelectChoice(choice);
@@ -46,20 +44,23 @@ export const ChoiceList = ({
               disabled={!canSelect}
               variant={canSelect ? "primary" : "secondary"}
               size="medium"
-              className="w-full text-left justify-start p-4 min-h-[60px]"
+              fullWidth={false}
+              className="horror-choice-button p-4 min-h-[52px]"
             >
-              <div className="flex flex-col items-start">
-                <span className="text-base leading-relaxed">{choice.text}</span>
+              <div className="flex flex-col items-center text-center w-full">
+                <span className="choice-text text-base leading-relaxed uppercase tracking-wide">
+                  {choice.text}
+                </span>
 
                 {requiresItem && (
                   <span
-                    className={`text-sm mt-1 ${
+                    className={`text-sm mt-1 text-center ${
                       canSelect ? "text-red-300" : "text-pale-text-muted"
                     }`}
                   >
                     {canSelect
-                      ? `✓ ${requiresItem}`
-                      : `⚠️ Requires: ${requiresItem}`}
+                      ? ` ✓ ${requiresItem}`
+                      : ` ⚠️ Requires: ${requiresItem}`}
                   </span>
                 )}
               </div>
@@ -73,9 +74,9 @@ export const ChoiceList = ({
         );
       })}
 
-      {/* Help text */}
-      <div className="mt-4 text-sm text-pale-text-muted">
-        <p> Some choices may require specific items from your inventory.</p>
+      {/* Muted helper text */}
+      <div className="mt-2 choices-help-text">
+        <p>Some choices may require specific items from your inventory.</p>
       </div>
     </div>
   );

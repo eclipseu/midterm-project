@@ -63,96 +63,86 @@ export const VictoryScreen = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-800 via-gray-900 to-dark flex items-center justify-center p-4 font-serif animate-fade-in">
-      <div className="max-w-2xl w-full">
-        {/* Main Victory Card */}
-        <div className="bg-gray-800 border border-yellow-500 rounded-lg shadow-2xl overflow-hidden animate-slide-up">
-          {/* Header */}
-          <div className="bg-gradient-to-r from-yellow-600 to-orange-500 text-white p-6 text-center">
-            <div className="text-6xl mb-4 animate-pulse-slow">🏆</div>
-            <h1 className="text-4xl font-title text-white mb-2">VICTORY!</h1>
-            <p className="text-yellow-200 mt-2 text-lg font-elegant">
-              You have successfully vanquished the darkness and saved the town!
-            </p>
-          </div>
+    <div className="victory-screen flex items-center justify-center p-6 font-serif">
+      {/* Background mist/smoke */}
+      <div className="victory-bg-mist" aria-hidden>
+        <div className="mist-layer" />
+        <div className="mist-layer" />
+        <div className="mist-layer" />
+      </div>
 
-          {/* Hero Info */}
-          <div className="p-6 bg-gray-700 border-b border-gray-600">
-            <h2 className="text-2xl font-bold text-pale-text mb-2 font-elegant">
-              🎉 Congratulations, {finalStats.playerName}!
-            </h2>
-            <p className="text-pale-text-muted text-lg">
-              The sun rises over San Gubat, and the townspeople are safe once
-              more.
-            </p>
-          </div>
+      <div className="max-w-3xl w-full animate-fade-in victory-card">
+        {/* Header */}
+        <div className="text-center p-8 border-b border-yellow-600/30">
+          <div className="text-7xl mb-4"></div>
+          <h1 className="text-5xl font-bold tracking-widest flicker-text-gold">
+            VICTORY!
+          </h1>
+          <p className="mt-4 text-yellow-200 italic text-lg max-w-xl mx-auto">
+            You have successfully vanquished the darkness and saved the town!
+          </p>
+        </div>
 
-          {/* Victory Statistics */}
-          <div className="p-6">
-            <h3 className="text-xl font-semibold text-pale-text mb-4 font-elegant">
-              Quest Completion Statistics
-            </h3>
+        {/* Hero Info */}
+        <div className="p-6 border-b border-yellow-600/20 text-center">
+          <h2 className="text-xl font-semibold text-yellow-300 mb-2">
+            {finalStats.playerName}'s Triumph
+          </h2>
+          <p className="text-gray-200">
+            The sun rises over San Gubat, and the townspeople are safe once
+            more.
+          </p>
+        </div>
 
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <div className="bg-gray-700 rounded-lg p-4">
-                <div className="text-3xl font-bold text-blue-400">
-                  {finalStats.locationsVisited}
-                </div>
-                <div className="text-sm text-pale-text-muted font-medium">
-                  Locations Explored
-                </div>
-              </div>
-
-              <div className="bg-gray-700 rounded-lg p-4">
-                <div className="text-3xl font-bold text-green-400">
-                  {finalStats.itemsCollected}
-                </div>
-                <div className="text-sm text-pale-text-muted font-medium">
-                  Items Collected
-                </div>
-              </div>
-
-              <div className="bg-gray-700 rounded-lg p-4">
-                <div className="text-3xl font-bold text-red-400">
-                  {finalStats.healthPercentage}%
-                </div>
-                <div className="text-sm text-pale-text-muted font-medium">
-                  Health Remaining
-                </div>
-              </div>
-
-              <div className="bg-gray-700 rounded-lg p-4">
-                <div className="text-3xl font-bold text-yellow-400">⭐</div>
-                <div className="text-sm text-pale-text-muted font-medium">
-                  Perfect Victory
-                </div>
-              </div>
+        {/* Victory Statistics */}
+        <div className="p-8 grid grid-cols-2 gap-6">
+          <div className="stat-tile victory-stat-tile stat-glow-gold text-center">
+            <div className="text-3xl font-bold text-blue-300">
+              {finalStats.locationsVisited}
             </div>
+            <p className="text-sm text-gray-300">Locations Explored</p>
           </div>
 
-          {/* Actions */}
-          <div className="p-6 bg-gray-900 border-t border-gray-700">
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Button
-                onClick={handlePlayAgain}
-                disabled={isResetting}
-                variant="primary"
-                size="large"
-                className="flex-1"
-              >
-                {isResetting ? "Preparing New Quest..." : "🔄 New Adventure"}
-              </Button>
-
-              <Button
-                onClick={() => navigate("/")}
-                variant="secondary"
-                size="large"
-                className="flex-1"
-              >
-                🏠 Main Menu
-              </Button>
+          <div className="stat-tile victory-stat-tile stat-glow-gold text-center">
+            <div className="text-3xl font-bold text-green-300">
+              {finalStats.itemsCollected}
             </div>
+            <p className="text-sm text-gray-300">Items Collected</p>
           </div>
+
+          <div className="stat-tile victory-stat-tile stat-glow-gold text-center">
+            <div className="text-3xl font-bold text-yellow-300">
+              {finalStats.healthPercentage}%
+            </div>
+            <p className="text-sm text-gray-300">Health Remaining</p>
+          </div>
+
+          <div className="stat-tile victory-stat-tile stat-glow-gold text-center">
+            <div className="text-3xl font-bold text-yellow-300">⭐</div>
+            <p className="text-sm text-gray-300">Perfect Victory</p>
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="victory-actions">
+          <Button
+            onClick={handlePlayAgain}
+            disabled={isResetting}
+            variant="primary"
+            size="large"
+            className="btn-blessing btn-cta"
+          >
+            {isResetting ? "Preparing New Quest..." : "New Adventure"}
+          </Button>
+
+          <Button
+            onClick={() => navigate("/")}
+            variant="secondary"
+            size="large"
+            className="btn-ghost btn-cta"
+          >
+            Main Menu
+          </Button>
         </div>
       </div>
     </div>

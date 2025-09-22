@@ -12,39 +12,15 @@ body,
   color: #d1d1d1;
 }
 
-/* Blood Drip Effect */
-.blood-drip {
-  position: fixed;
-  top: -50px;
-  width: 4px;
-  height: 100px;
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    #800000 20%,
-    #600000 80%,
-    transparent 100%
-  );
-  opacity: 0.4;
-  animation: bloodDrip 20s infinite linear;
-  z-index: 9;
-}
-
-.blood-drip:nth-child(1) {
-  left: 15%;
-  animation-delay: 0s;
-}
-.blood-drip:nth-child(2) {
-  left: 35%;
-  animation-delay: 7s;
-}
-.blood-drip:nth-child(3) {
-  left: 75%;
-  animation-delay: 12s;
-}
-.blood-drip:nth-child(4) {
-  left: 90%;
-  animation-delay: 4s;
+/* Dialogue PNG tuning variables */
+:root {
+  /* Match the provided PNG natural ratio (width/height = 2048/580 ≈ 3.53) */
+  --dialogue-aspect: 2048 / 580;
+  /* Safe area inside the PNG (top, right, bottom, left) */
+  --dialogue-safe-top: 7%;
+  --dialogue-safe-right: 13%;
+  --dialogue-safe-bottom: 22%;
+  --dialogue-safe-left: 13%;
 }
 
 /* Common CSS Classes */
@@ -169,35 +145,87 @@ body,
   }
 }
 
-/* Enhanced Dialogue Box */
-.dialogue-box {
-  background: linear-gradient(
-    135deg,
-    rgba(15, 5, 5, 0.97) 0%,
-    rgba(25, 5, 5, 0.97) 100%
-  );
-  border: 1px solid #522;
-  border-radius: 6px;
-  min-height: 200px;
+/* PNG Dialogue Box Container (background image only) */
+.dialogue-box,
+.horror-dialogue-box {
+  background-image: url("/assets/dialogue-box.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  /* Clean look: the PNG is the box */
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+
+  /* Scale by aspect ratio; width is controlled by parent (.dialogue-container) */
+  width: 100%;
+  aspect-ratio: var(--dialogue-aspect, 3.53 / 1);
+  min-height: 120px;
   position: relative;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(60, 0, 0, 0.3);
+}
+/* Inner text container for precise positioning within PNG */
+.dialogue-box .dialogue-text,
+.horror-dialogue-box .dialogue-text {
+  /* Fill the PNG box and then inset via padding */
+  position: absolute;
+  inset: 0;
+
+  /* Safe-area padding (percentages scale with the box) */
+  padding-top: var(--dialogue-safe-top, 22%);
+  padding-right: var(--dialogue-safe-right, 14%);
+  padding-bottom: var(--dialogue-safe-bottom, 20%);
+  padding-left: var(--dialogue-safe-left, 24%);
+  margin: 0;
+
+  /* Text styling */
+  color: inherit; /* keep theme color (#d1d1d1) */
+  font-size: clamp(14px, 1.5vw, 18px);
+  line-height: 1.5;
+  font-weight: 500;
+
+  /* Ensure no unintended effects */
+  background: none;
+  border: none;
+  box-shadow: none;
+  text-shadow: none;
+
+  /* Layout */
+  display: block;
+  /* Justify dialogue text by default for better reading blocks */
+  text-align: justify;
+  text-justify: inter-word;
+  /* Improve wrapping on narrow widths */
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  text-wrap: pretty;
+  box-sizing: border-box;
   overflow: hidden;
+  min-height: 0; /* override generic min-height */
 }
 
-.dialogue-box::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: radial-gradient(
-      circle at 20% 80%,
-      rgba(120, 0, 0, 0.1) 0%,
-      transparent 20%
-    ),
-    radial-gradient(circle at 80% 20%, rgba(80, 0, 0, 0.1) 0%, transparent 20%);
-  pointer-events: none;
+/* Fine-tune safe area on small screens */
+@media (max-width: 768px) {
+  .dialogue-box,
+  .horror-dialogue-box {
+    max-width: 95%;
+  }
+
+  :root {
+    --dialogue-safe-top: 14%;
+    --dialogue-safe-right: 20%;
+    --dialogue-safe-bottom: 24%;
+    --dialogue-safe-left: 32%;
+  }
+}
+
+/* Remove any overlay effects */
+.dialogue-box::before,
+.horror-dialogue-box::before {
+  display: none;
 }
 
 /* Enhanced Arrow Button */
@@ -214,8 +242,131 @@ body,
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
-  position: relative;
+  /* Let the component's "absolute top-4 right-4" control positioning */
+  z-index: 2;
+  .btn-cta:hover {
+    transform: translateY(-2px);
+  }
   overflow: hidden;
+}
+
+/* Force top-right placement inside the dialogue box */
+.victory-screen {
+  position: relative;
+  min-height: 100vh;
+  background: radial-gradient(
+      60% 80% at 50% 30%,
+      rgba(130, 90, 0, 0.22) 0%,
+      rgba(0, 0, 0, 0.95) 60%
+    ),
+    #000;
+  overflow: hidden;
+}
+
+.victory-bg-mist {
+  position: absolute;
+  inset: -20% -40%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.victory-bg-mist .mist-layer {
+  position: absolute;
+  top: 0;
+  left: -30%;
+  width: 160%;
+  height: 140%;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(255, 240, 180, 0.06),
+    rgba(255, 255, 255, 0) 60%
+  );
+  filter: blur(22px);
+  opacity: 0.32;
+  animation: driftMist 22s linear infinite;
+}
+.victory-bg-mist .mist-layer:nth-child(2) {
+  animation-duration: 30s;
+  animation-direction: reverse;
+  opacity: 0.24;
+}
+.victory-bg-mist .mist-layer:nth-child(3) {
+  animation-duration: 40s;
+  opacity: 0.2;
+  transform: scale(1.2);
+}
+
+.victory-card {
+  position: relative;
+  z-index: 2;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 10, 6, 0.95) 0%,
+    rgba(8, 8, 8, 0.98) 100%
+  );
+  border: 1px solid rgba(220, 170, 40, 0.7);
+  border-radius: 12px;
+  box-shadow: 0 0 35px rgba(255, 200, 60, 0.35),
+    inset 0 0 60px rgba(120, 90, 0, 0.2);
+  overflow: hidden;
+  text-align: center;
+}
+.victory-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'%3E%3Cg stroke='rgba(255,200,60,0.25)' stroke-width='0.8' fill='none'%3E%3Cpath d='M20 40 L120 90 L180 50'/%3E%3Cpath d='M520 30 L430 110 L380 70'/%3E%3Cpath d='M260 310 L310 270 L370 330'/%3E%3Cpath d='M80 290 L130 270 L170 310'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: cover;
+  mix-blend-mode: overlay;
+  opacity: 0.18;
+}
+
+.flicker-text-gold {
+  color: #ffd36e;
+  text-shadow: 0 0 12px rgba(255, 200, 80, 0.6),
+    0 0 32px rgba(255, 200, 80, 0.25);
+  animation: flickerText 2.5s infinite steps(60);
+}
+
+.victory-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 1.5rem;
+  border-top: 1px solid rgba(255, 200, 80, 0.25);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.btn-blessing {
+  background: linear-gradient(180deg, #d6a941 0%, #8a6a12 100%);
+  border: 1px solid #f1c75a;
+  color: #111;
+  text-shadow: 0 0 4px rgba(255, 230, 140, 0.6);
+  box-shadow: 0 0 18px rgba(255, 210, 90, 0.3);
+  transition: all 0.25s ease;
+}
+.btn-blessing:hover {
+  background: linear-gradient(180deg, #e6bb55 0%, #9a7a1a 100%);
+  box-shadow: 0 0 26px rgba(255, 220, 110, 0.45);
+  transform: translateY(-2px);
+}
+
+.victory-stat-tile {
+  background: rgba(8, 8, 6, 0.8);
+  border: 1px solid rgba(255, 200, 80, 0.35);
+}
+.stat-glow-gold {
+  box-shadow: 0 0 14px rgba(255, 210, 90, 0.28);
+}
+.dialogue-box .arrow-button,
+.horror-dialogue-box .arrow-button {
+  position: absolute;
+  top: 4.5rem;
+  right: 3rem;
+  left: auto;
 }
 
 .arrow-button::before {
@@ -366,6 +517,32 @@ body,
   letter-spacing: 1px;
 }
 
+/* Hearts-based HP display */
+.heart-bar {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  filter: drop-shadow(0 0 3px rgba(255, 0, 0, 0.2));
+}
+.heart-full path {
+  filter: drop-shadow(0 0 3px rgba(255, 0, 0, 0.3));
+}
+.heart-empty path {
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.3));
+}
+.heart-bar-low .heart-full path {
+  animation: heartPulse 1.2s ease-in-out infinite;
+}
+@keyframes heartPulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 3px rgba(255, 0, 0, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 6px rgba(255, 0, 0, 0.45));
+  }
+}
+
 /* Enhanced Inventory Icon */
 .inventory-icon {
   position: absolute;
@@ -461,92 +638,109 @@ body,
   z-index: 80;
 }
 
-.horror-dialogue-box {
-  background: linear-gradient(
-    135deg,
-    rgba(15, 5, 5, 0.97) 0%,
-    rgba(25, 5, 5, 0.97) 100%
-  );
-  border: 1px solid #722;
-  border-radius: 6px;
-  padding: 20px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(60, 0, 0, 0.3);
-  backdrop-filter: blur(3px);
-  position: relative;
-  overflow: hidden;
-}
-
-.horror-dialogue-box::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(
-      circle at 20% 30%,
-      rgba(120, 0, 0, 0.1) 0%,
-      transparent 40%
-    ),
-    radial-gradient(circle at 80% 70%, rgba(80, 0, 0, 0.1) 0%, transparent 40%);
-  pointer-events: none;
-  z-index: 1;
-}
-
+/* Speaker name within dialogue box */
+.dialogue-text .speaker-name,
 .horror-dialogue-box .speaker-name {
-  color: #f44;
+  color: #8b1538; /* Deep burgundy for speaker names */
   font-size: 18px;
   font-weight: bold;
-  text-shadow: 0 0 8px rgba(255, 0, 0, 0.7);
-  margin-bottom: 10px;
-  position: relative;
-  z-index: 2;
-  letter-spacing: 1px;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+  /* Speaker labels should remain left aligned */
+  text-align: left;
 }
 
-.horror-dialogue-box .dialogue-text {
-  color: #d1d1d1;
-  font-size: 16px;
-  line-height: 1.6;
-  text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
-  position: relative;
-  z-index: 2;
-}
+/* Additional responsive adjustments */
+@media (max-width: 768px) {
+  .dialogue-box,
+  .horror-dialogue-box {
+    max-width: 95%;
+    min-height: 80px;
+  }
 
-/* Enhanced Choice List */
+  .dialogue-text {
+    padding: 20% 15%; /* Adjust percentage padding for mobile */
+    font-size: 14px;
+    line-height: 1.3;
+  }
+  .dialogue-text .speaker-name {
+    font-size: 16px;
+  }
+} /* Enhanced Choice List */
 .choices-container {
   position: absolute;
-  bottom: 200px;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   width: 90%;
-  max-width: 600px;
-  z-index: 70;
+  max-width: 640px;
+  z-index: 90; /* above background and dialogue if needed */
+  pointer-events: auto;
+}
+
+/* Subtle vertical vignette behind choices for separation */
+.choices-container::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -120px;
+  transform: translateX(-50%);
+  width: min(75vw, 900px);
+  height: calc(100% + 240px);
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.35) 22%,
+    rgba(0, 0, 0, 0.35) 78%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  filter: blur(6px);
+  opacity: 0.6;
+  pointer-events: none;
 }
 
 .horror-choices {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  align-items: center; /* center buttons horizontally */
 }
 
+/* Muted helper text under choices */
+.choices-help-text {
+  font-size: 0.8rem;
+  color: rgba(209, 209, 209, 0.45);
+  text-align: center;
+}
+
+/* Refined choice bar to match reference: translucent dark strip with light border */
 .horror-choice-button {
-  background: linear-gradient(
-    135deg,
-    rgba(30, 10, 0, 0.9) 0%,
-    rgba(50, 15, 0, 0.9) 100%
-  );
-  border: 1px solid #633;
-  border-radius: 4px;
-  padding: 15px 20px;
-  color: #d1d1d1;
-  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 6px;
+  padding: 12px 18px;
+  color: #e7e5e4; /* warm pale */
+  font-size: 15px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
   position: relative;
   backdrop-filter: blur(2px);
-  text-align: left;
+  text-align: center;
   overflow: hidden;
+  /* soft white glow behind plus subtle drop */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35), 0 0 16px rgba(255, 255, 255, 0.18),
+    0 0 32px rgba(255, 255, 255, 0.09);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+
+  /* fixed width while staying responsive */
+  width: 560px;
+  max-width: 85vw;
+  margin: 0 auto;
 }
 
 .horror-choice-button::before {
@@ -559,22 +753,18 @@ body,
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 0, 0, 0.2),
+    rgba(255, 255, 255, 0.15),
     transparent
   );
   transition: all 0.5s ease;
 }
 
 .horror-choice-button:hover {
-  border-color: #a44;
-  background: linear-gradient(
-    135deg,
-    rgba(40, 15, 0, 0.9) 0%,
-    rgba(60, 20, 0, 0.9) 100%
-  );
-  box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
-  color: #f44;
-  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), 0 0 24px rgba(255, 255, 255, 0.22),
+    0 0 44px rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
 }
 
 .horror-choice-button:hover::before {
@@ -585,6 +775,15 @@ body,
   opacity: 0.5;
   cursor: not-allowed;
   filter: grayscale(1);
+}
+
+/* Choice text refinement */
+.choice-text {
+  font-family: var(--font-elegant, "Cinzel", serif);
+  letter-spacing: 0.2px;
+  display: block;
+  width: 100%;
+  text-align: center;
 }
 
 /* Enhanced Progress Footer */
@@ -787,6 +986,19 @@ body,
   }
 }
 
+/* Breathing red glow specifically for dialogue text */
+@keyframes dialogueBreathRed {
+  0%,
+  100% {
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.6), 0 0 6px rgba(255, 0, 0, 0.35),
+      0 0 12px rgba(255, 0, 0, 0.25);
+  }
+  50% {
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.7), 0 0 14px rgba(255, 0, 0, 0.85),
+      0 0 28px rgba(255, 0, 0, 0.45);
+  }
+}
+
 /* Speaker and Dialogue Text Styles */
 .speaker-name {
   font-family: "Shippori Mincho", serif;
@@ -802,6 +1014,22 @@ body,
   line-height: 1.6;
   min-height: 60px;
   text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Make the narrative paragraph feel eerie without affecting the speaker label */
+.dialogue-text p {
+  font-family: var(--font-Creepster, "Eater", "Nosifer", cursive);
+  letter-spacing: 0.3px;
+  color: #ffffff; /* keep text white */
+  animation: dialogueBreathRed 2.8s ease-in-out infinite;
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .dialogue-text p {
+    animation: none;
+    text-shadow: 0 0 6px rgba(255, 0, 0, 0.4);
+  }
 }
 
 /* Next Button */
@@ -869,10 +1097,387 @@ body,
 
   .choices-container {
     bottom: 150px;
-    width: 95%;
+    width: 100%;
   }
 
   .blood-drip {
     display: none;
   }
+}
+
+/* =====================
+   Game Over Screen CSS - Horror Edition
+   ===================== */
+
+.game-over-screen {
+  position: relative;
+  min-height: 100vh;
+  background: radial-gradient(
+      40% 60% at 50% 30%,
+      rgba(120, 0, 0, 0.4) 0%,
+      rgba(60, 0, 0, 0.3) 20%,
+      rgba(0, 0, 0, 0.95) 70%
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.8) 0px,
+      rgba(0, 0, 0, 0.8) 1px,
+      transparent 1px,
+      transparent 4px
+    ),
+    #000;
+  overflow: hidden;
+  animation: screenFlicker 7s infinite alternate;
+}
+
+.game-over-bg-mist {
+  position: absolute;
+  inset: -30% -50%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.game-over-bg-mist .mist-layer {
+  position: absolute;
+  top: 0;
+  left: -30%;
+  width: 160%;
+  height: 140%;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(150, 0, 0, 0.15),
+    rgba(80, 0, 0, 0.1) 40%,
+    rgba(0, 0, 0, 0) 70%
+  );
+  filter: blur(28px) hue-rotate(-10deg);
+  opacity: 0.4;
+  animation: driftMist 22s linear infinite;
+}
+
+.game-over-bg-mist .mist-layer:nth-child(2) {
+  animation-duration: 35s;
+  animation-direction: reverse;
+  opacity: 0.3;
+  background: radial-gradient(
+    ellipse at 30% 70%,
+    rgba(80, 0, 40, 0.12),
+    rgba(0, 0, 0, 0) 60%
+  );
+}
+
+.game-over-bg-mist .mist-layer:nth-child(3) {
+  animation-duration: 45s;
+  opacity: 0.25;
+  transform: scale(1.3);
+  filter: blur(35px) hue-rotate(20deg);
+  background: radial-gradient(
+    ellipse at 70% 40%,
+    rgba(40, 0, 60, 0.1),
+    rgba(0, 0, 0, 0) 50%
+  );
+}
+
+@keyframes driftMist {
+  0% {
+    transform: translateX(0) translateY(0) scale(1);
+  }
+  33% {
+    transform: translateX(12%) translateY(-3%) scale(1.08);
+  }
+  66% {
+    transform: translateX(-8%) translateY(2%) scale(1.12);
+  }
+  100% {
+    transform: translateX(5%) translateY(-1%) scale(1.05);
+  }
+}
+
+@keyframes screenFlicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  97% {
+    opacity: 0.97;
+  }
+  98% {
+    opacity: 0.6;
+  }
+  99% {
+    opacity: 0.98;
+  }
+}
+
+.game-over-card {
+  position: relative;
+  z-index: 2;
+  background: linear-gradient(
+      135deg,
+      rgba(20, 0, 0, 0.95) 0%,
+      rgba(12, 0, 0, 0.98) 100%
+    ),
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 2px,
+      rgba(80, 0, 0, 0.1) 2px,
+      rgba(80, 0, 0, 0.1) 4px
+    );
+  border: 1px solid rgba(200, 0, 0, 0.7);
+  border-radius: 8px;
+  box-shadow: 0 0 45px rgba(255, 0, 0, 0.4), inset 0 0 80px rgba(120, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 0, 0, 0.2);
+  overflow: hidden;
+  animation: cardPulse 8s ease-in-out infinite;
+  /* Center all textual content inside the card */
+  text-align: center;
+}
+
+.game-over-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'%3E%3Cg stroke='rgba(200,0,0,0.35)' stroke-width='0.8' fill='none'%3E%3Cpath d='M10 30 L100 80 L160 40'/%3E%3Cpath d='M500 20 L420 100 L380 60'/%3E%3Cpath d='M250 300 L300 260 L360 320'/%3E%3Cpath d='M70 280 L120 260 L160 300'/%3E%3Cpath d='M300 100 L350 150 L400 120'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: cover;
+  mix-blend-mode: overlay;
+  opacity: 0.25;
+  animation: veinThrob 15s ease-in-out infinite;
+}
+
+.game-over-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 0, 0, 0.1),
+    transparent
+  );
+  animation: bloodFlow 12s ease-in-out infinite;
+}
+
+@keyframes cardPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.002);
+  }
+}
+
+@keyframes veinThrob {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes bloodFlow {
+  0% {
+    left: -100%;
+  }
+  50% {
+    left: 100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.flicker-text {
+  animation: flickerText 2.2s infinite steps(30);
+  text-shadow: 0 0 15px rgba(255, 0, 0, 0.8), 0 0 35px rgba(255, 0, 0, 0.4),
+    0 0 55px rgba(255, 0, 0, 0.2);
+  color: #ff4d4d;
+}
+
+@keyframes flickerText {
+  0%,
+  5%,
+  12%,
+  19%,
+  24%,
+  32%,
+  39%,
+  45%,
+  50%,
+  55%,
+  60%,
+  67%,
+  72%,
+  78%,
+  85%,
+  92%,
+  100% {
+    opacity: 0.8;
+    text-shadow: 0 0 15px rgba(255, 0, 0, 0.8), 0 0 35px rgba(255, 0, 0, 0.4);
+  }
+  3%,
+  8%,
+  15%,
+  22%,
+  28%,
+  35%,
+  42%,
+  48%,
+  53%,
+  58%,
+  63%,
+  70%,
+  75%,
+  82%,
+  88%,
+  95% {
+    opacity: 0.4;
+    text-shadow: 0 0 5px rgba(255, 0, 0, 0.3), 0 0 10px rgba(255, 0, 0, 0.2);
+  }
+}
+
+.stat-tile {
+  background: rgba(10, 0, 0, 0.85);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  border-radius: 6px;
+  padding: 1.25rem;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8), 0 0 5px rgba(255, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-tile::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 0, 0, 0.7),
+    transparent
+  );
+  animation: statPulse 3s ease-in-out infinite;
+}
+
+.stat-glow-red {
+  box-shadow: 0 0 18px rgba(255, 0, 0, 0.35);
+  animation: glowPulse 4s ease-in-out infinite;
+}
+.stat-glow-green {
+  box-shadow: 0 0 18px rgba(0, 255, 150, 0.25);
+  animation: glowPulse 5s ease-in-out infinite 1s;
+}
+.stat-glow-blue {
+  box-shadow: 0 0 18px rgba(50, 150, 255, 0.3);
+  animation: glowPulse 6s ease-in-out infinite 2s;
+}
+.stat-glow-purple {
+  box-shadow: 0 0 18px rgba(180, 50, 255, 0.3);
+  animation: glowPulse 7s ease-in-out infinite 3s;
+}
+
+@keyframes statPulse {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes glowPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 18px currentColor;
+  }
+  50% {
+    box-shadow: 0 0 25px currentColor;
+  }
+}
+
+.btn-blood {
+  background: linear-gradient(180deg, #900 0%, #600 100%);
+  border: 1px solid #c00;
+  color: #fff;
+  text-shadow: 0 0 8px rgba(255, 0, 0, 0.7);
+  box-shadow: 0 0 25px rgba(255, 0, 0, 0.4);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-blood::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.btn-blood:hover {
+  background: linear-gradient(180deg, #a00 0%, #700 100%);
+  box-shadow: 0 0 35px rgba(255, 0, 0, 0.6);
+  transform: translateY(-2px) scale(1.02);
+}
+
+.btn-blood:hover::before {
+  left: 100%;
+}
+
+.btn-ghost {
+  background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+  color: #bbb;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+.btn-ghost:hover {
+  opacity: 0.8;
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  color: #ff4d4d;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
+}
+
+/* Centered, larger CTA area for Game Over */
+.game-over-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 1.5rem;
+  border-top: 1px solid rgba(160, 20, 20, 0.3);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Upsized button treatment layered on top of theme variants */
+.btn-cta {
+  min-width: 260px;
+  padding: 16px 30px;
+  font-size: 1.125rem; /* ~18px */
+  letter-spacing: 0.03em;
+  border-radius: 10px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.55);
+}
+.btn-cta:hover {
+  transform: translateY(-2px);
 }
