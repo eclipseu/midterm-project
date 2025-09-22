@@ -44,9 +44,9 @@ export const GameOverScreen = () => {
   const finalStats = {
     locationsVisited: gameState.visitedNodes.size,
     itemsCollected: gameState.player.inventory.length,
-    finalHealth: gameState.player.hp,
+    finalHealth: gameState.isGameOver ? 0 : gameState.player.hp, // Always 0 when game over
     maxHealth: gameState.player.maxHp,
-    damageReceived: gameState.player.maxHp - gameState.player.hp,
+    damageReceived: gameState.player.maxHp - Math.max(0, gameState.player.hp),
     currentLocation: gameState.currentNodeId,
     playerName: gameState.player.name,
   };

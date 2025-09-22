@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Skull } from "lucide-react";
+import styles from "../../styles/components/Jumpscare.module.css";
 
 interface JumpscareScreenProps {
   isVisible: boolean;
   onComplete: () => void;
-  jumpscareAsset?: string; // Path to .vg asset or other media
+  jumpscareAsset?: string; // Path to jumpscare image
   intensity?: "low" | "medium" | "high";
   duration?: number; // Duration in milliseconds
 }
@@ -13,151 +14,138 @@ export const JumpscareScreen = ({
   isVisible,
   onComplete,
   jumpscareAsset,
-  intensity = "medium",
-  duration = 2000,
+  intensity = "high",
+  duration = 3000, // 3 seconds default
 }: JumpscareScreenProps) => {
   const [showContent, setShowContent] = useState(false);
-  const [isExiting, setIsExiting] = useState(false);
+  const [isShaking, setIsShaking] = useState(false);
+  const [audioInstance, setAudioInstance] = useState<HTMLAudioElement | null>(
+    null
+  );
 
   useEffect(() => {
     if (isVisible) {
       // Show jumpscare immediately
       setShowContent(true);
-      setIsExiting(false);
 
-      // Play jumpscare sound effect if available
+      // Start screen shake effect
+      setIsShaking(true);
+
+      // Play jumpscare sound effect
       const audio = new Audio("/sounds/jumpscare.mp3");
-      audio.volume = 0.3;
+      audio.volume = 0.8; // Louder for more intensity
+      audio.currentTime = 0;
+      setAudioInstance(audio);
+
       audio.play().catch(() => {
-        // Ignore audio play errors (user interaction required)
+        console.warn(
+          "Audio playback failed - user interaction may be required"
+        );
       });
 
-      // Auto-hide after duration
-      const timer = setTimeout(() => {
-        setIsExiting(true);
-        setTimeout(() => {
-          setShowContent(false);
-          onComplete();
-        }, 500); // Exit animation duration
+      // Stop shake after 1 second
+      const shakeTimer = setTimeout(() => {
+        setIsShaking(false);
+      }, 1000);
+
+      // Auto-hide after duration (3 seconds)
+      const hideTimer = setTimeout(() => {
+        setShowContent(false);
+        if (audio) {
+          audio.pause();
+          audio.currentTime = 0;
+        }
+        onComplete();
       }, duration);
 
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(shakeTimer);
+        clearTimeout(hideTimer);
+        if (audio) {
+          audio.pause();
+          audio.currentTime = 0;
+        }
+      };
+    } else {
+      setShowContent(false);
+      setIsShaking(false);
+      if (audioInstance) {
+        audioInstance.pause();
+        audioInstance.currentTime = 0;
+      }
     }
-  }, [isVisible, duration, onComplete]);
+  }, [isVisible, duration, onComplete]); // Removed audioInstance from dependency array
 
   if (!isVisible || !showContent) {
     return null;
   }
 
-  const intensityClasses = {
-    low: "animate-pulse",
-    medium: "animate-bounce",
-    high: "animate-shake",
-  };
-
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-black transition-opacity duration-500 ${
-        isExiting ? "opacity-0" : "opacity-100"
+      className={`${styles.jumpscareOverlay} ${
+        isShaking ? styles.shakeEffect : ""
       }`}
-      style={{
-        background: "radial-gradient(circle, #7f1d1d 0%, #000000 70%)",
-      }}
     >
-      {/* Jumpscare Content */}
-      <div
-        className={`relative ${intensityClasses[intensity]} ${
-          isExiting ? "scale-0" : "scale-100"
-        } transition-transform duration-500`}
-      >
-        {/* Video/Asset Container */}
+      {/* Full-screen background effects */}
+      <div className={styles.backgroundEffects}>
+        {/* Blood drip effect */}
+        <div className={styles.bloodDrip}></div>
+
+        {/* Flash overlay */}
+        <div className={styles.flashOverlay}></div>
+
+        {/* Red pulse overlay */}
+        <div className={styles.redPulse}></div>
+      </div>
+
+      {/* Main jumpscare content */}
+      <div className={styles.jumpscareContent}>
         {jumpscareAsset ? (
-          <div className="relative">
-            {jumpscareAsset.endsWith(".vg") ? (
-              // For .vg files, you might need a specific player
-              <div className="w-96 h-96 bg-red-900 rounded-lg flex items-center justify-center border-4 border-red-600">
-                <p className="text-white text-center">
-                  VG Asset: {jumpscareAsset}
-                  <br />
-                  <span className="text-sm opacity-75">
-                    (VG player implementation needed)
-                  </span>
-                </p>
-              </div>
-            ) : jumpscareAsset.match(/\.(mp4|webm|ogg)$/i) ? (
-              // Video files
-              <video
-                autoPlay
-                muted
-                className="w-96 h-96 object-cover rounded-lg border-4 border-red-600"
-                onEnded={() => {
-                  setIsExiting(true);
-                  setTimeout(onComplete, 500);
-                }}
-              >
-                <source src={jumpscareAsset} type="video/mp4" />
-              </video>
-            ) : jumpscareAsset.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
-              // Image files
-              <img
-                src={jumpscareAsset}
-                alt="Jumpscare"
-                className="w-96 h-96 object-cover rounded-lg border-4 border-red-600"
-              />
-            ) : (
-              // Unknown format - show placeholder
-              <div className="w-96 h-96 bg-red-900 rounded-lg flex items-center justify-center border-4 border-red-600">
-                <Skull size={120} className="text-red-300" />
-              </div>
-            )}
+          <div className={styles.imageContainer}>
+            <img
+              src={jumpscareAsset}
+              alt="Jumpscare"
+              className={styles.jumpscareImage}
+              onError={(e) => {
+                console.warn("Jumpscare image failed to load:", jumpscareAsset);
+                // Fallback to default content
+                e.currentTarget.style.display = "none";
+              }}
+            />
+            {/* Horror text overlay */}
+            <div className={styles.horrorText}>PALDO!</div>
           </div>
         ) : (
-          // Default jumpscare without asset
-          <div className="w-96 h-96 bg-gradient-to-br from-red-900 to-black rounded-lg flex items-center justify-center border-4 border-red-600 shadow-2xl">
-            <div className="text-center">
-              <Skull size={120} className="text-red-300 mx-auto mb-4" />
-              <h2 className="text-3xl font-title text-red-300 animate-pulse">
-                ASWANG!
-              </h2>
-              <p className="text-red-400 font-elegant mt-2">
-                Nakakita ka ng hindi mo dapat nakita...
-              </p>
+          // Default jumpscare content
+          <div className={styles.defaultContent}>
+            <Skull size={200} className={styles.skull} />
+            <div className={styles.horrorText}>ASWANG!</div>
+            <div className={styles.subText}>
+              Nakakita ka ng hindi mo dapat nakita...
             </div>
           </div>
         )}
-
-        {/* Screen Effects */}
-        <div className="absolute inset-0 pointer-events-none">
-          {/* Flash effect */}
-          <div className="absolute inset-0 bg-white opacity-20 animate-ping"></div>
-
-          {/* Red overlay pulse */}
-          <div className="absolute inset-0 bg-red-600 opacity-30 animate-pulse"></div>
-
-          {/* Vignette effect */}
-          <div
-            className="absolute inset-0 rounded-lg"
-            style={{
-              background:
-                "radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.8) 70%)",
-            }}
-          ></div>
-        </div>
       </div>
 
-      {/* Screen shake effect overlay */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="w-full h-full animate-shake opacity-20 bg-gradient-to-br from-red-800 to-transparent"></div>
-      </div>
+      {/* Vignette effect */}
+      <div className={styles.vignette}></div>
 
-      {/* Emergency close button (for accessibility) */}
+      {/* Static noise effect */}
+      <div className={styles.staticNoise}></div>
+
+      {/* Emergency close button (hidden by default, appears after 2 seconds) */}
       <button
         onClick={() => {
-          setIsExiting(true);
-          setTimeout(onComplete, 100);
+          setShowContent(false);
+          if (audioInstance) {
+            audioInstance.pause();
+            audioInstance.currentTime = 0;
+          }
+          onComplete();
         }}
-        className="absolute top-4 right-4 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-all duration-200 opacity-50 hover:opacity-100"
+        className={styles.emergencyClose}
         aria-label="Close jumpscare"
+        style={{ opacity: 0, pointerEvents: "none" }}
       >
         ✕
       </button>

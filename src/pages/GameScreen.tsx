@@ -29,6 +29,7 @@ export const GameScreen = () => {
     undefined
   );
   const [showInventoryModal, setShowInventoryModal] = useState(false);
+  const [jumpscareCompleted, setJumpscareCompleted] = useState(false);
 
   // Auto-save when game state changes
   useEffect(() => {
@@ -37,14 +38,22 @@ export const GameScreen = () => {
     }
   }, [gameState, saveGame]);
 
-  // Navigate to appropriate screen when game ends
+  // Navigate to appropriate screen when game ends (after jumpscare completes for ending nodes)
   useEffect(() => {
-    if (gameState.isGameOver) {
-      navigate("/gameover");
-    } else if (gameState.isVictory) {
-      navigate("/victory");
+    if (gameState.isGameOver && jumpscareCompleted) {
+      const timer = setTimeout(() => {
+        navigate("/gameover");
+      }, 5000); // 5 second delay after jumpscare completes
+
+      return () => clearTimeout(timer);
+    } else if (gameState.isVictory && jumpscareCompleted) {
+      const timer = setTimeout(() => {
+        navigate("/victory");
+      }, 5000); // 5 second delay after jumpscare completes
+
+      return () => clearTimeout(timer);
     }
-  }, [gameState.isGameOver, gameState.isVictory, navigate]);
+  }, [gameState.isGameOver, gameState.isVictory, jumpscareCompleted, navigate]);
 
   const handleChoiceSelect = (choice: Choice) => {
     if (!canSelectChoice(choice)) {
@@ -82,19 +91,40 @@ export const GameScreen = () => {
 
   const handleDialogueComplete = () => {
     setShowDialogue(false);
-    setShowChoices(true);
+
+    // Only show choices if this isn't an ending node
+    if (!currentNode?.isEnding) {
+      setShowChoices(true);
+    }
   };
 
   const handleJumpscareComplete = () => {
     setShowJumpscare(false);
+    setJumpscareCompleted(true);
+
+    // After jumpscare completes, show dialogue
+    setShowDialogue(true);
+    setShowChoices(false);
   };
 
   // Reset dialogue flow when node changes
   useEffect(() => {
     if (currentNode) {
-      setShowDialogue(true);
-      setShowChoices(false);
-      setShowJumpscare(false);
+      setJumpscareCompleted(false);
+
+      // Check if node has jumpscareImage - trigger jumpscare first
+      if (currentNode.metadata?.jumpscareImage) {
+        setJumpscareAsset(currentNode.metadata.jumpscareImage);
+        setShowJumpscare(true);
+        setShowDialogue(false); // Hide dialogue during jumpscare
+        setShowChoices(false);
+      } else {
+        // No jumpscare, show dialogue normally
+        setShowDialogue(true);
+        setShowChoices(false);
+        setShowJumpscare(false);
+        setJumpscareCompleted(true); // Mark as completed for ending timer logic
+      }
     }
   }, [gameState.currentNodeId]);
 
@@ -106,13 +136,33 @@ export const GameScreen = () => {
 
   return (
     <div className="game-screen-container">
+      {/* Dynamic Background Image - Behind everything */}
+      {currentNode?.metadata?.backgroundImage && (
+        <div
+          className="scene-background"
+          style={{
+            backgroundImage: `url(${currentNode.metadata.backgroundImage})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            zIndex: 1,
+            opacity: 0.6,
+          }}
+        />
+      )}
+
       {/* Jumpscare Screen Overlay */}
       <JumpscareScreen
         isVisible={showJumpscare}
         onComplete={handleJumpscareComplete}
         jumpscareAsset={jumpscareAsset}
         intensity="high"
-        duration={2000}
+        duration={3000}
       />
 
       {/* HP Hearts - Top Left */}
@@ -141,7 +191,23 @@ export const GameScreen = () => {
       {/* Character Art - Center */}
       <div className="character-container">
         <img
-          src="https://placehold.co/400x600/1a1a1a/666?text=Character"
+          src={(() => {
+            // Use character image from current node metadata if available
+            if (currentNode?.metadata?.characterImage) {
+              return currentNode.metadata.characterImage;
+            }
+
+            // Fallback to HP-based character images
+            const hpPercentage =
+              (gameState.player.hp / gameState.player.maxHp) * 100;
+            if (hpPercentage <= 25) {
+              return "/assets/character-injured.png";
+            } else if (hpPercentage <= 50) {
+              return "/assets/character-tired.png";
+            } else {
+              return "/assets/character.png";
+            }
+          })()}
           alt="Character Portrait"
           className="character-image"
         />

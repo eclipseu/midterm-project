@@ -1,6 +1,10 @@
 {
   "start": {
     "text": "You arrive at the dimly lit town of San Gubat. The air is heavy with fear. Who do you seek for information first?",
+    "metadata": {
+      "characterImage": "/assets/characters/character.png",
+      "backgroundImage": "/assets/backgrounds/town-entrance.jpg"
+    },
     "choices": [
       {
         "text": "Find the old Albularyo (Healer) at the edge of town.",
@@ -14,6 +18,10 @@
   },
   "askAlbularyo": {
     "text": "'It has wings like a bat and separates at the waist,' the old healer whispers, handing you a rough pouch. 'Take this salt. The Manananggal despises it.' You've gained Asin.",
+    "metadata": {
+      "characterImage": "/assets/characters/character2.png",
+      "backgroundImage": "/assets/backgrounds/healer-hut.jpg"
+    },
     "onArrive": { "addItem": "Asin" },
     "choices": [
       {
@@ -24,6 +32,10 @@
   },
   "askCaptain": {
     "text": "'My best men have vanished,' the captain says grimly, handing you a braid of garlic. 'We believe it's a Wakwak, a different kind of horror. This might keep it at bay.' You've gained Bawang.",
+    "metadata": {
+      "characterImage": "/assets/characters/character3.png",
+      "backgroundImage": "/assets/backgrounds/town-hall.jpg"
+    },
     "onArrive": { "addItem": "Bawang" },
     "choices": [
       {
@@ -34,6 +46,10 @@
   },
   "oldChurch_entry": {
     "text": "The ancient church is silent, its stone walls covered in moss. Dust motes dance in the single moonbeam piercing the roof. Do you investigate the crumbling bell tower or the desecrated altar?",
+    "metadata": {
+      "characterImage": "/assets/characters/character4.png",
+      "backgroundImage": "/assets/backgrounds/old-church.jpg"
+    },
     "choices": [
       {
         "text": "Climb the creaking stairs to the bell tower.",
@@ -52,12 +68,16 @@
             "value": -15
           }
         ],
-        "jumpscareAsset": "/assets/aswang-jumpscare.jpg"
+        "jumpscareAsset": "/assets/jumpscares/aswang-jumpscare.jpg"
       }
     ]
   },
   "bellTower": {
     "text": "In the belfry, a creature with ragged wings and sharp talons screeches! It's a Wakwak, feasting on a goat. It turns its glowing red eyes on you!",
+    "metadata": {
+      "characterImage": "/assets/characters/character5.png",
+      "backgroundImage": "/assets/backgrounds/bell-tower.jpg"
+    },
     "choices": [
       {
         "text": "Thrust the garlic braid at it!",
@@ -77,6 +97,10 @@
   },
   "useGarlicOnWakwak": {
     "text": "The Wakwak recoils from the pungent garlic, giving you an opening! You slash with your bolo, wounding its wing. It shrieks and flies off into the night, dropping something shiny.",
+    "metadata": {
+      "characterImage": "/assets/characters/character6.png",
+      "backgroundImage": "/assets/backgrounds/bell-tower-fight.jpg"
+    },
     "onArrive": { "addItem": "Agimat" },
     "choices": [
       {
@@ -87,6 +111,11 @@
   },
   "fightWakwakNoGarlic": {
     "text": "Without the garlic to weaken it, the Wakwak is too fast and ferocious. It claws you deeply before you can land a solid blow. You lose 30 HP and it escapes.",
+    "metadata": {
+      "characterImage": "/assets/characters/character7.png",
+      "backgroundImage": "/assets/backgrounds/bell-tower-fight2.jpg",
+      "jumpscareImage": "/assets/jumpscares/wakwak-attack.jpg"
+    },
     "onArrive": { "takeDamage": 30 },
     "choices": [
       {
@@ -97,6 +126,10 @@
   },
   "altar": {
     "text": "The altar is overturned. Behind it, you find a small, intricately carved amulet throbbing with a faint warmth. It feels protective. You've found an Agimat.",
+    "metadata": {
+      "characterImage": "/assets/characters/character8.png",
+      "backgroundImage": "/assets/backgrounds/altar.jpg"
+    },
     "onArrive": { "addItem": "Agimat" },
     "choices": [
       {
@@ -107,6 +140,10 @@
   },
   "riceFields_entry": {
     "text": "The moon hangs high over the vast, dark rice paddies. The air is still, save for the chirping of crickets. In the distance, you hear the faint sound of a baby crying.",
+    "metadata": {
+      "characterImage": "/assets/characters/character9.png",
+      "backgroundImage": "/assets/backgrounds/rice-fields.jpg"
+    },
     "choices": [
       {
         "text": "It's a trap. A Tiyanak. Ignore it and press on.",
@@ -120,6 +157,10 @@
   },
   "investigateTiyanak": {
     "text": "You follow the crying to a small thicket. As you part the leaves, the crying stops. A small, monstrous creature with sharp teeth leaps out, biting your leg before scurrying away! It was a Tiyanak!",
+    "metadata": {
+      "characterImage": "/assets/characters/character10.png",
+      "backgroundImage": "/assets/backgrounds/dark-rice-fields.jpg"
+    },
     "choices": [
       {
         "text": "You fell for the oldest trick in the book! (Lose 25 HP)",
@@ -135,6 +176,11 @@
   },
   "tiyanakDamage": {
     "text": "The bite is painful and you feel a strange weakness spreading. You lose 25 HP. You curse your foolishness and continue towards the ominous Balete tree.",
+    "metadata": {
+      "characterImage": "/assets/characters/character11.png",
+      "backgroundImage": "/assets/backgrounds/poison-effect.jpg",
+      "jumpscareImage": "/assets/jumpscares/tiyanak-bite.jpg"
+    },
     "onArrive": { "takeDamage": 25 },
     "choices": [
       {
@@ -145,6 +191,10 @@
   },
   "baleteTree_approach": {
     "text": "You've reached the heart of the darkness: a massive, ancient Balete tree with thick, hanging roots. You can hear a sickening squelching sound from above. The Manananggal is here. This is the final battle.",
+    "metadata": {
+      "characterImage": "/assets/characters/character12.png",
+      "backgroundImage": "/assets/backgrounds/balete-tree.jpg"
+    },
     "choices": [
       {
         "text": "Charge the tree and attack the creature head-on!",
@@ -158,6 +208,11 @@
   },
   "finalFight_direct": {
     "text": "You attack the flying creature directly, but it's too agile in the air. It swoops down, its claws tearing at you. Your bravery costs you dearly. You lose 50 HP.",
+    "metadata": {
+      "characterImage": "/assets/characters/character13.png",
+      "backgroundImage": "/assets/backgrounds/final-battle.jpg",
+      "jumpscareImage": "/assets/jumpscares/manananggal-claws.jpg"
+    },
     "onArrive": { "takeDamage": 50 },
     "choices": [
       {
@@ -168,6 +223,10 @@
   },
   "finalFight_search": {
     "text": "You ignore the airborne horror and frantically search the base of the Balete tree. Hidden among the gnarled roots, you find it: the creature's vulnerable lower torso, standing motionless.",
+    "metadata": {
+      "characterImage": "/assets/characters/character14.png",
+      "backgroundImage": "/assets/backgrounds/balete-roots.jpg"
+    },
     "choices": [
       {
         "text": "Pour the holy salt into the torso!",
@@ -182,18 +241,36 @@
   },
   "goodEnding": {
     "text": "As the salt touches the flesh, the torso erupts in black smoke. High above, the winged creature gives a final, agonizing shriek and disintegrates into dust. The sun begins to rise. You have saved San Gubat.",
+    "metadata": {
+      "characterImage": "/assets/characters/character15.png",
+      "backgroundImage": "/assets/backgrounds/victory-sunrise.jpg"
+    },
     "isEnding": true
   },
   "badEnding_noSalt": {
     "text": "Your bolo cuts deep, but it's not enough. The creature swoops down, enraged, and impales you with its sharp tongue. Your lack of the proper tool was your undoing. GAME OVER.",
+    "metadata": {
+      "characterImage": "/assets/characters/character16.png",
+      "backgroundImage": "/assets/backgrounds/defeat-darkness.jpg",
+      "jumpscareImage": "/assets/jumpscares/aswang-jumpscare.jpg"
+    },
     "isEnding": true
   },
   "gameOver_hp": {
     "text": "Your wounds are too severe. You collapse, and the darkness consumes you. Your hunt ends in failure. GAME OVER.",
+    "metadata": {
+      "characterImage": "/assets/characters/character17.png",
+      "backgroundImage": "/assets/backgrounds/game-over.jpg",
+      "jumpscareImage": "/assets/jumpscares/aswang-jumpscare.jpg"
+    },
     "isEnding": true
   },
   "darkStain": {
     "text": "As your fingers touch the dark stain, a violent vision flashes through your mind! You see the Aswang's feeding ground, its victims' blood soaking into the stone. The psychic shock leaves you weakened and shaken, but you now know where to find the creature.",
+    "metadata": {
+      "characterImage": "/assets/characters/character18.png",
+      "backgroundImage": "/assets/backgrounds/dark-vision.jpg"
+    },
     "choices": [
       {
         "text": "Steel yourself and continue your hunt, despite your wounds.",

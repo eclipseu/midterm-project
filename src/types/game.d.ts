@@ -39,6 +39,15 @@ export interface StoryNode {
   choices?: Choice[];
   onArrive?: NodeAction;
   isEnding?: boolean;
+  metadata?: {
+    title?: string;
+    location?: string;
+    characterImage?: string;
+    backgroundImage?: string;
+    jumpscareImage?: string;
+    mood?: "tense" | "peaceful" | "mysterious" | "dangerous" | "hopeful";
+    backgroundMusic?: string;
+  };
 }
 
 // Actions that can occur when arriving at a node
