@@ -1,11 +1,13 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGame } from "../contexts/GameContext";
+import { useAudio } from "../contexts/AudioContext";
 import DialogueBox from "../components/game/DialogueBox";
 import ChoiceList from "../components/game/ChoiceList";
 import JumpscareScreen from "../components/game/JumpscareScreen";
 import Inventory from "../components/game/Inventory";
 import HeartBar from "../components/ui/HeartBar";
+import { AudioControls } from "../components/ui/AudioControls";
 import type { Choice } from "../types/game.d";
 
 export const GameScreen = () => {
@@ -18,6 +20,7 @@ export const GameScreen = () => {
     shouldHideChoice,
     saveGame,
   } = useGame();
+  const { playBackground } = useAudio();
 
   const currentNode = getCurrentNode();
 
@@ -77,6 +80,11 @@ export const GameScreen = () => {
       return () => clearTimeout(timer);
     }
   }, [gameState.isGameOver, gameState.isVictory, jumpscareCompleted, navigate]);
+
+  // Play game background music when component mounts
+  useEffect(() => {
+    playBackground("background");
+  }, [playBackground]);
 
   const handleChoiceSelect = (choice: Choice) => {
     if (!canSelectChoice(choice)) {
@@ -280,6 +288,11 @@ export const GameScreen = () => {
 
   return (
     <div className="game-screen-container">
+      {/* Audio Controls */}
+      <div className="absolute top-4 right-4 z-50">
+        <AudioControls />
+      </div>
+
       {/* Dynamic Background Images with Smooth Transitions */}
       {currentBackground && (
         <div

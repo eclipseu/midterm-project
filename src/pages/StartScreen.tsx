@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGame } from "../contexts/GameContext";
+import { useAudio } from "../contexts/AudioContext";
 import { hasSavedGame } from "../services/persistence";
 import Modal from "../components/ui/Modal";
+import { AudioControls } from "../components/ui/AudioControls";
 import styles from "../styles/components/StartScreen.module.css";
 
 export const StartScreen = () => {
   const navigate = useNavigate();
   const { dispatch, loadGame } = useGame();
+  const { playBackground } = useAudio();
   const [playerName, setPlayerName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -19,6 +22,11 @@ export const StartScreen = () => {
   } | null>(null);
   const [showTutorial, setShowTutorial] = useState(false);
   const [showCredits, setShowCredits] = useState(false);
+
+  // Play menu background music when component mounts
+  useEffect(() => {
+    playBackground("background-menu");
+  }, [playBackground]);
 
   // Check for existing saved game on component mount
   useEffect(() => {
@@ -96,6 +104,11 @@ export const StartScreen = () => {
     <div
       className={`min-h-screen relative overflow-hidden ${styles.menuBackground}`}
     >
+      {/* Audio Controls */}
+      <div className="absolute top-4 right-4 z-20">
+        <AudioControls />
+      </div>
+
       {/* Animated Background */}
       <div className="absolute inset-0">
         <div className={styles.backgroundOverlay}></div>

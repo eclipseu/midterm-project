@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGame } from "../contexts/GameContext";
+import { useAudio } from "../contexts/AudioContext";
 import {
   clearGame,
   savePlayerStats,
@@ -11,8 +12,14 @@ import Button from "../components/ui/Button";
 export const GameOverScreen = () => {
   const navigate = useNavigate();
   const { gameState, dispatch } = useGame();
+  const { playBackground } = useAudio();
   const [isResetting, setIsResetting] = useState(false);
   const [statsUpdated, setStatsUpdated] = useState(false);
+
+  // Play game over background music when component mounts
+  useEffect(() => {
+    playBackground("background-gameover");
+  }, [playBackground]);
 
   useEffect(() => {
     if (!statsUpdated && gameState.gameStarted) {
