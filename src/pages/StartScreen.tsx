@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGame } from "../contexts/GameContext";
 import { useAudio } from "../contexts/AudioContext";
-import { hasSavedGame } from "../services/persistence";
+import { hasSavedGame, clearGame } from "../services/persistence";
 import Modal from "../components/ui/Modal";
 import styles from "../styles/components/StartScreen.module.css";
 
@@ -59,7 +59,17 @@ export const StartScreen = () => {
     setError("");
 
     try {
+      // Clear any existing saved game data before starting new game
+      console.log("Clearing existing save data...");
+      const clearResult = clearGame(false); // Only clear current game, keep settings/stats
+      if (!clearResult.success) {
+        console.warn("Failed to clear existing save:", clearResult.error);
+      } else {
+        console.log("Save data cleared successfully");
+      }
+
       // Start new game with player name
+      console.log("Starting new game with player:", playerName);
       dispatch({ type: "START_GAME", playerName });
 
       // Navigate to game screen

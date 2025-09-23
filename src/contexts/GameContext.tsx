@@ -45,13 +45,10 @@ const createInitialGameState = (playerName: string = ""): GameState => ({
 const gameReducer = (state: GameState, action: GameAction): GameState => {
   switch (action.type) {
     case "START_GAME":
+      // Create completely fresh game state for new game
       return {
-        ...state,
-        gameStarted: true,
-        player: {
-          ...state.player,
-          name: action.playerName || state.player.name,
-        },
+        ...createInitialGameState(action.playerName),
+        gameStarted: true, // Set to true to start the game
       };
 
     case "SET_PLAYER_NAME":
