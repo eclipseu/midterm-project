@@ -8,6 +8,7 @@ interface AudioContextType {
   setVolume: (volume: number) => void;
   playBackground: (audioKey: string) => void;
   stopBackground: () => void;
+  playSoundEffect: (soundKey: string) => void;
 }
 
 const AudioContext = createContext<AudioContextType | undefined>(undefined);
@@ -46,6 +47,10 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     audioService.stopBackground();
   };
 
+  const playSoundEffect = (soundKey: string) => {
+    audioService.playSoundEffect(soundKey);
+  };
+
   useEffect(() => {
     // Cleanup on unmount
     return () => {
@@ -60,6 +65,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     setVolume,
     playBackground,
     stopBackground,
+    playSoundEffect,
   };
 
   return (

@@ -1,5 +1,6 @@
 import type { Choice } from "../../types/game.d";
 import Button from "../ui/Button";
+import { useAudio } from "../../contexts/AudioContext";
 
 interface ChoiceListProps {
   choices: Choice[];
@@ -16,8 +17,18 @@ export const ChoiceList = ({
   shouldHideChoice,
   className = "",
 }: ChoiceListProps) => {
+  const { playSoundEffect } = useAudio();
+
   // Filter out hidden choices
   const visibleChoices = choices.filter((choice) => !shouldHideChoice(choice));
+
+  const handleChoiceClick = (choice: Choice) => {
+    const canSelect = canSelectChoice(choice);
+    if (canSelect) {
+      playSoundEffect("choice");
+      onChoiceSelect(choice);
+    }
+  };
 
   if (visibleChoices.length === 0) {
     return (
@@ -40,7 +51,7 @@ export const ChoiceList = ({
         return (
           <div key={index} className="relative">
             <Button
-              onClick={() => canSelect && onChoiceSelect(choice)}
+              onClick={() => handleChoiceClick(choice)}
               disabled={!canSelect}
               variant={canSelect ? "primary" : "secondary"}
               size="medium"

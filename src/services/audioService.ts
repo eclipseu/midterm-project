@@ -17,12 +17,20 @@ class AudioService {
       background: "/assets/audio/background.mp3",
       "background-gameover": "/assets/audio/background-gameover.mp3",
       "background-victory": "/assets/audio/background-victory.mp3",
+      choice: "/assets/audio/choice.mp3",
     };
 
     Object.entries(audioFiles).forEach(([key, src]) => {
       const audio = new Audio(src);
-      audio.loop = true;
-      audio.volume = this.volume;
+      if (key === "choice") {
+        // Sound effects don't loop and have a bit lower volume
+        audio.loop = false;
+        audio.volume = this.volume;
+      } else {
+        // Background music loops
+        audio.loop = true;
+        audio.volume = this.volume;
+      }
       audio.preload = "auto";
       this.audioElements.set(key, audio);
     });
@@ -32,14 +40,14 @@ class AudioService {
     const enableAudio = () => {
       console.log("Audio enabled by user interaction");
       this.audioEnabled = true;
-      
+
       // Play pending audio if there is one
       if (this.pendingAudioKey && !this.isMuted) {
         console.log(`Playing pending audio: ${this.pendingAudioKey}`);
         this.playBackground(this.pendingAudioKey);
         this.pendingAudioKey = null;
       }
-      
+
       document.removeEventListener("click", enableAudio);
       document.removeEventListener("keydown", enableAudio);
       document.removeEventListener("touchstart", enableAudio);
@@ -51,8 +59,10 @@ class AudioService {
   }
 
   public playBackground(audioKey: string): void {
-    console.log(`Attempting to play audio: ${audioKey}, audioEnabled: ${this.audioEnabled}, isMuted: ${this.isMuted}`);
-    
+    console.log(
+      `Attempting to play audio: ${audioKey}, audioEnabled: ${this.audioEnabled}, isMuted: ${this.isMuted}`
+    );
+
     if (this.isMuted) return;
 
     // If audio is not enabled yet, store the request for later
@@ -70,7 +80,7 @@ class AudioService {
       this.currentBackground = audio;
       audio.currentTime = 0;
       audio.volume = this.volume;
-      
+
       console.log(`Playing audio: ${audioKey}`);
       audio.play().catch((error) => {
         console.warn("Audio play failed:", error);
@@ -88,10 +98,33 @@ class AudioService {
     }
   }
 
+  public playSoundEffect(soundKey: string): void {
+    if (this.isMuted || !this.audioEnabled) return;
+
+    const audio = this.audioElements.get(soundKey);
+    if (audio) {
+      // Reset the sound to the beginning
+      audio.currentTime = 0;
+      audio.volume = this.volume; // Sound effects at max volume
+
+      audio.play().catch((error) => {
+        console.warn("Sound effect play failed:", error);
+      });
+    } else {
+      console.warn(`Sound effect not found: ${soundKey}`);
+    }
+  }
+
   public setVolume(newVolume: number): void {
     this.volume = Math.max(0, Math.min(1, newVolume));
-    this.audioElements.forEach((audio) => {
-      audio.volume = this.volume;
+    this.audioElements.forEach((audio, key) => {
+      if (key === "choice") {
+        // Sound effects at max volume
+        audio.volume = this.volume;
+      } else {
+        // Background music uses full volume
+        audio.volume = this.volume;
+      }
     });
   }
 
