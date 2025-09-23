@@ -22,6 +22,7 @@ export const StartScreen = () => {
   } | null>(null);
   const [showTutorial, setShowTutorial] = useState(false);
   const [showCredits, setShowCredits] = useState(false);
+  const [showNewGameForm, setShowNewGameForm] = useState(false);
 
   // Play menu background music when component mounts
   useEffect(() => {
@@ -132,93 +133,89 @@ export const StartScreen = () => {
         {/* Right Side - Menu Options */}
         <div className="w-96 p-8 flex flex-col justify-center items-center text-center">
           <div className={styles.menuContainer}>
-            {/* Continue Game Option */}
-            {savedGameExists && savedGameInfo && (
-              <div className={`${styles.menuSection} mb-8`}>
-                <div className={styles.continueBox}>
-                  <div className="text-orange-400 font-bold text-sm mb-2 text-center">
-                    CONTINUE GAME
-                  </div>
-                  <div className="text-white text-sm space-y-1 text-center">
-                    <div>
-                      Player:{" "}
-                      <span className="text-yellow-300">
-                        {savedGameInfo.playerName}
-                      </span>
-                    </div>
-                    <div>
-                      Location:{" "}
-                      <span className="text-yellow-300">
-                        {savedGameInfo.location}
-                      </span>
-                    </div>
-                    <div>
-                      Saved:{" "}
-                      <span className="text-yellow-300">
-                        {new Date(savedGameInfo.timestamp).toLocaleDateString()}
-                      </span>
-                    </div>
-                  </div>
-                  <button
-                    onClick={continueGame}
-                    disabled={isLoading}
-                    className={`${styles.menuButton} ${styles.continueButton} w-full mt-3`}
-                  >
-                    {isLoading ? "LOADING..." : "CONTINUE"}
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* New Game Section */}
+            {/* Start New Game Option */}
             <div className={styles.menuSection}>
-              <div className={styles.newGameTitle}>
-                {savedGameExists ? "NEW GAME" : "START GAME"}
-              </div>
+              <button
+                onClick={() => setShowNewGameForm(!showNewGameForm)}
+                className={`${styles.menuButton} ${styles.startButton} w-full mb-4`}
+                type="button"
+              >
+                START NEW GAME
+              </button>
 
-              {/* Player Name Input */}
-              <form onSubmit={handleSubmit} className={styles.formGroup}>
-                <div className="mb-2 w-full text-center">
-                  <label
-                    className={`${styles.inputLabel} ${styles.invisibleLabel} block mb-2`}
-                  >
-                    ENTER NAME:
-                  </label>
-                  <input
-                    type="text"
-                    value={playerName}
-                    onChange={handleNameChange}
-                    placeholder="WHISPER YOUR NAME..."
-                    className={`${styles.textInput} w-full text-center`}
-                    maxLength={20}
-                    disabled={isLoading}
-                    autoFocus
-                  />
-                  <div className={`${styles.inputHint} mt-2 text-xs`}>
-                    2–20 CHARACTERS
+              {/* Expanded New Game Form */}
+              {showNewGameForm && (
+                <div className={`${styles.newGameForm} mb-6`}>
+                  <form onSubmit={handleSubmit} className={styles.formGroup}>
+                    <div className="mb-4 w-full text-center">
+                      <label className={`${styles.inputLabel} block mb-3`}>
+                        ENTER NAME:
+                      </label>
+                      <input
+                        type="text"
+                        value={playerName}
+                        onChange={handleNameChange}
+                        placeholder="WHISPER YOUR NAME..."
+                        className={`${styles.textInput} w-full text-center`}
+                        maxLength={20}
+                        disabled={isLoading}
+                        autoFocus
+                      />
+                      <div className={`${styles.inputHint} mt-2 text-xs`}>
+                        2–20 CHARACTERS
+                      </div>
+                    </div>
+
+                    {error && (
+                      <div className={`${styles.errorBox} mb-4`}>
+                        {error.toUpperCase()}
+                      </div>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={startNewGame}
+                      disabled={
+                        isLoading || !playerName || playerName.length < 2
+                      }
+                      className={`${styles.menuButton} ${styles.confirmButton} w-full`}
+                    >
+                      {isLoading ? "SUMMONING DARKNESS..." : "ENTER THE ABYSS"}
+                    </button>
+                  </form>
+                </div>
+              )}
+            </div>
+
+            {/* Continue Game Option */}
+            <div className={styles.menuSection}>
+              <button
+                onClick={savedGameExists ? continueGame : undefined}
+                disabled={!savedGameExists || isLoading}
+                className={`${styles.menuButton} ${
+                  savedGameExists
+                    ? styles.continueButton
+                    : styles.disabledButton
+                } w-full`}
+                type="button"
+              >
+                {savedGameExists ? "CONTINUE" : "NO PROGRESS FOUND"}
+              </button>
+
+              {savedGameExists && savedGameInfo && (
+                <div className={`${styles.saveInfo} mt-2 text-xs`}>
+                  <div className="text-yellow-300">
+                    {savedGameInfo.playerName} • {savedGameInfo.location}
+                  </div>
+                  <div className="text-gray-400">
+                    {new Date(savedGameInfo.timestamp).toLocaleDateString()}
                   </div>
                 </div>
-              </form>
-
-              <div className={styles.buttonGroup}>
-                {error && (
-                  <div className={`${styles.errorBox}`}>
-                    {error.toUpperCase()}
-                  </div>
-                )}
-                <button
-                  type="button"
-                  onClick={startNewGame}
-                  disabled={isLoading || !playerName || playerName.length < 2}
-                  className={`${styles.menuButton} ${styles.startButton}`}
-                >
-                  {isLoading ? "SUMMONING DARKNESS..." : "ENTER THE ABYSS"}
-                </button>
-              </div>
+              )}
             </div>
 
             {/* Menu Buttons */}
-            <div className={`${styles.buttonGroup}`}>
+            <div className={`${styles.buttonGroup} space-y-3`}>
               <button
                 onClick={() => setShowTutorial(true)}
                 className={`${styles.menuButton} ${styles.secondaryButton} w-full`}

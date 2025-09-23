@@ -8,6 +8,7 @@ import JumpscareScreen from "../components/game/JumpscareScreen";
 import Inventory from "../components/game/Inventory";
 import HeartBar from "../components/ui/HeartBar";
 import { AudioControls } from "../components/ui/AudioControls";
+import GameMenu from "../components/game/GameMenu";
 import type { Choice } from "../types/game.d";
 
 export const GameScreen = () => {
@@ -288,7 +289,11 @@ export const GameScreen = () => {
 
   return (
     <div className="game-screen-container">
-      {/* Audio Controls */}
+      {/* Top Controls */}
+      <div className="absolute top-4 left-4 z-50">
+        <GameMenu />
+      </div>
+      
       <div className="absolute top-4 right-4 z-50">
         <AudioControls />
       </div>

@@ -15,10 +15,10 @@ import type {
   Choice,
   Player,
 } from "../types/game.d";
+import { saveGame as persistSaveGame, loadGame as persistLoadGame } from "../services/persistence";
 import storyData from "../data/story.json";
 
-// LocalStorage key for game save data
-const SAVE_GAME_KEY = "text-adventure-save";
+// LocalStorage key for game save data - removed, using persistence service now
 
 // Initial player state
 const createInitialPlayer = (name: string = ""): Player => ({
@@ -231,56 +231,31 @@ export const GameProvider = ({ children }: GameProviderProps) => {
     [gameState.player.inventory]
   );
 
-  // Save game to localStorage
+  // Save game to localStorage using persistence service
   const saveGame = useCallback(() => {
     try {
-      const saveData = {
-        ...gameState,
-        // Convert Set to Array for JSON serialization
-        visitedNodes: Array.from(gameState.visitedNodes),
-        timestamp: Date.now(),
-      };
-      localStorage.setItem(SAVE_GAME_KEY, JSON.stringify(saveData));
+      const result = persistSaveGame(gameState);
+      if (!result.success) {
+        console.error("Failed to save game:", result.error);
+      }
     } catch (error) {
       console.error("Failed to save game:", error);
     }
   }, [gameState]);
 
-  // Load game from localStorage
+  // Load game from localStorage using persistence service
   const loadGame = useCallback((): boolean => {
     try {
-      const savedData = localStorage.getItem(SAVE_GAME_KEY);
-      if (!savedData) return false;
-
-      const parsedData = JSON.parse(savedData);
-
-      // Validate the saved data structure
-      if (!parsedData.player || !parsedData.currentNodeId) {
-        console.warn("Invalid save data structure");
+      const result = persistLoadGame();
+      if (result.success && result.gameState) {
+        dispatch({ type: "LOAD_SAVED_GAME", savedState: result.gameState });
+        return true;
+      } else {
+        console.warn("Failed to load game:", result.error);
         return false;
       }
-
-      // Convert visitedNodes array back to Set
-      const loadedState: GameState = {
-        ...parsedData,
-        visitedNodes: new Set(parsedData.visitedNodes || []),
-      };
-
-      dispatch({ type: "LOAD_SAVED_GAME", savedState: loadedState });
-      return true;
     } catch (error) {
       console.error("Failed to load game:", error);
-      return false;
-    }
-  }, []);
-
-  // Check if there's a saved game
-  const hasSavedGame = useCallback((): boolean => {
-    try {
-      const savedData = localStorage.getItem(SAVE_GAME_KEY);
-      return savedData !== null;
-    } catch (error) {
-      console.error("Failed to check for saved game:", error);
       return false;
     }
   }, []);
@@ -321,7 +296,6 @@ export const GameProvider = ({ children }: GameProviderProps) => {
     shouldHideChoice,
     saveGame,
     loadGame,
-    hasSavedGame,
   };
 
   return (

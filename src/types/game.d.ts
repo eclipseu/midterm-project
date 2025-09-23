@@ -86,7 +86,6 @@ export interface GameContextType {
   shouldHideChoice: (choice: Choice) => boolean;
   saveGame: () => void;
   loadGame: () => boolean;
-  hasSavedGame: () => boolean;
 }
 
 // Utility types
