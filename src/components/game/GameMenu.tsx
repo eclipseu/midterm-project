@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAudio } from "../../contexts/AudioContext";
 import Modal from "../ui/Modal";
+import styles from "../../styles/components/Modal.module.css";
 import { Menu, VolumeX, Volume2 } from "lucide-react";
 
 interface GameMenuProps {
@@ -25,20 +26,31 @@ export const GameMenu = ({ className = "" }: GameMenuProps) => {
 
   return (
     <>
-      {/* Menu Button */}
-      <button
-        onClick={() => setIsMenuOpen(true)}
-        className={`
-          bg-black/70 hover:bg-black/90 
-          text-white border border-red-500/30 hover:border-red-500/60
-          p-3 rounded-lg transition-all duration-200
-          shadow-lg hover:shadow-red-500/20
-          ${className}
-        `}
-        aria-label="Open game menu"
-      >
-        <Menu size={20} />
-      </button>
+      {/* Menu Button - Conditionally Rendered */}
+      {/* This line is the key change. The button is only rendered if isMenuOpen is false. */}
+      {!isMenuOpen && (
+        <button
+          onClick={() => setIsMenuOpen(true)}
+          className={`
+            game-menu-button
+            bg-black/70 hover:bg-black/90 
+            text-white border border-red-500/30 hover:border-red-500/60
+            p-3 rounded-lg transition-all duration-200
+            shadow-lg hover:shadow-red-500/20
+            ${className}
+          `}
+          aria-label="Open game menu"
+          style={{
+            position: "fixed",
+            top: "120px",
+            left: "20px",
+            zIndex: 10001,
+            pointerEvents: "auto",
+          }}
+        >
+          <Menu size={20} />
+        </button>
+      )}
 
       {/* Menu Modal */}
       <Modal
@@ -50,35 +62,29 @@ export const GameMenu = ({ className = "" }: GameMenuProps) => {
       >
         <div className="space-y-6 p-4">
           {/* Sound Controls */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-pale-text mb-4">
-              Audio Settings
-            </h3>
-            
+          <div className={styles.audioSettings}>
+            <h3 className={styles.audioSettingsTitle}>Audio Settings</h3>
+
             {/* Mute Toggle */}
-            <div className="flex items-center justify-between">
-              <span className="text-pale-text-muted">Sound</span>
+            <div className={styles.settingRow}>
+              <span className={styles.volumeLabel}>Sound</span>
               <button
                 onClick={toggleMute}
-                className={`
-                  flex items-center gap-2 px-3 py-2 rounded-lg transition-all
-                  ${isMuted 
-                    ? 'bg-red-600/20 text-red-400 border border-red-500/30' 
-                    : 'bg-green-600/20 text-green-400 border border-green-500/30'
-                  }
-                `}
+                className={`${styles.soundToggleButton} ${
+                  isMuted ? styles.soundToggleMuted : styles.soundToggleEnabled
+                }`}
               >
                 {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-                {isMuted ? 'Muted' : 'Enabled'}
+                {isMuted ? "Muted" : "Enabled"}
               </button>
             </div>
 
             {/* Volume Slider */}
             {!isMuted && (
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-pale-text-muted">Volume</span>
-                  <span className="text-pale-text text-sm">
+              <div className={styles.volumeControls}>
+                <div className={styles.volumeRow}>
+                  <span className={styles.volumeLabel}>Volume</span>
+                  <span className={styles.volumeDisplay}>
                     {Math.round(volume * 100)}%
                   </span>
                 </div>
@@ -89,14 +95,11 @@ export const GameMenu = ({ className = "" }: GameMenuProps) => {
                   step="0.1"
                   value={volume}
                   onChange={handleVolumeChange}
-                  className="
-                    w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer
-                    slider-thumb:appearance-none slider-thumb:w-4 slider-thumb:h-4 
-                    slider-thumb:bg-red-500 slider-thumb:rounded-full slider-thumb:cursor-pointer
-                    slider-thumb:shadow-lg slider-thumb:shadow-red-500/30
-                  "
+                  className={styles.volumeSlider}
                   style={{
-                    background: `linear-gradient(to right, #dc2626 0%, #dc2626 ${volume * 100}%, #374151 ${volume * 100}%, #374151 100%)`
+                    background: `linear-gradient(to right, #dc2626 0%, #dc2626 ${
+                      volume * 100
+                    }%, #374151 ${volume * 100}%, #374151 100%)`,
                   }}
                 />
               </div>
@@ -104,26 +107,15 @@ export const GameMenu = ({ className = "" }: GameMenuProps) => {
           </div>
 
           {/* Menu Actions */}
-          <div className="border-t border-gray-700 pt-6 space-y-3">
+          <div className={styles.menuActions}>
             <button
               onClick={() => setIsMenuOpen(false)}
-              className="
-                w-full bg-gray-700 hover:bg-gray-600 
-                text-white py-3 px-4 rounded-lg transition-colors
-                border border-gray-600 hover:border-gray-500
-              "
+              className={styles.resumeButton}
             >
               Resume Game
             </button>
-            
-            <button
-              onClick={handleExitToMenu}
-              className="
-                w-full bg-red-600/20 hover:bg-red-600/30 
-                text-red-400 hover:text-red-300 py-3 px-4 rounded-lg transition-colors
-                border border-red-500/30 hover:border-red-500/50
-              "
-            >
+
+            <button onClick={handleExitToMenu} className={styles.exitButton}>
               Exit to Main Menu
             </button>
           </div>

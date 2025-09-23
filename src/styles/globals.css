@@ -1,3 +1,15 @@
+/* Custom Cursor for Horror Theme */
+*,
+button,
+a,
+input,
+textarea,
+select {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="black" stroke="%23ff1100" stroke-width="1.5"/></svg>')
+      8 8,
+    auto !important;
+}
+
 /* Global Reset & Base */
 html,
 body,
@@ -571,6 +583,50 @@ body,
   transition: all 0.5s ease-in-out;
   opacity: 1;
   transform: translateX(0);
+}
+
+/* Game Menu Button - positioned below HP bar */
+.game-menu-button {
+  /* Position and layer the button as specified in the original code */
+  position: absolute !important;
+  top: 2.5% !important;
+  left: 50% !important;
+  transform: translateX(-50%); /* Center the button horizontally */
+  z-index: 10001 !important;
+  pointer-events: auto !important;
+
+  /* Horror Theme Styling */
+  background-color: rgba(
+    26,
+    10,
+    10,
+    0.7
+  ); /* Very dark red-brown with transparency */
+  color: #c25e5e; /* Pale, blood-like red for the icon */
+  border: 1px solid #6b0f0f; /* Dark red border */
+  padding: 1rem;
+  border-radius: 8px; /* Slightly rounded corners */
+  transition: all 0.3s ease; /* Smooth transitions for hover effects */
+  box-shadow: 0 0 10px rgba(220, 20, 60, 0.2); /* Subtle red glow */
+}
+
+/* Hover and Active states for interactivity */
+.game-menu-button:hover {
+  background-color: rgba(
+    40,
+    15,
+    15,
+    0.85
+  ); /* Slightly darker background on hover */
+  border-color: #800000; /* Darker red border */
+  box-shadow: 0 0 20px rgba(220, 20, 60, 0.5); /* More intense glow on hover */
+  transform: translateX(-50%) scale(1.05); /* Grow the button slightly on hover */
+}
+
+.game-menu-button:active {
+  background-color: #330d0d; /* Even darker on click */
+  border-color: #4b0d0d;
+  transform: translateX(-50%) scale(1); /* Return to original size */
 }
 
 .hp-container.fade-in {

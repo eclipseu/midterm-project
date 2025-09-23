@@ -7,7 +7,6 @@ import ChoiceList from "../components/game/ChoiceList";
 import JumpscareScreen from "../components/game/JumpscareScreen";
 import Inventory from "../components/game/Inventory";
 import HeartBar from "../components/ui/HeartBar";
-import { AudioControls } from "../components/ui/AudioControls";
 import GameMenu from "../components/game/GameMenu";
 import type { Choice } from "../types/game.d";
 
@@ -289,14 +288,10 @@ export const GameScreen = () => {
 
   return (
     <div className="game-screen-container">
-      {/* Top Controls */}
-      <div className="absolute top-4 left-4 z-50">
-        <GameMenu />
-      </div>
-      
-      <div className="absolute top-4 right-4 z-50">
-        <AudioControls />
-      </div>
+      <div className="absolute top-4 right-4 z-50"></div>
+
+      {/* Game Menu - Fixed positioning handled in component */}
+      <GameMenu />
 
       {/* Dynamic Background Images with Smooth Transitions */}
       {currentBackground && (

@@ -4,7 +4,6 @@ import { useGame } from "../contexts/GameContext";
 import { useAudio } from "../contexts/AudioContext";
 import { hasSavedGame } from "../services/persistence";
 import Modal from "../components/ui/Modal";
-import { AudioControls } from "../components/ui/AudioControls";
 import styles from "../styles/components/StartScreen.module.css";
 
 export const StartScreen = () => {
@@ -105,11 +104,6 @@ export const StartScreen = () => {
     <div
       className={`min-h-screen relative overflow-hidden ${styles.menuBackground}`}
     >
-      {/* Audio Controls */}
-      <div className="absolute top-4 right-4 z-20">
-        <AudioControls />
-      </div>
-
       {/* Animated Background */}
       <div className="absolute inset-0">
         <div className={styles.backgroundOverlay}></div>
@@ -243,7 +237,7 @@ export const StartScreen = () => {
             </div>
 
             {/* Copyright */}
-            <div className={styles.copyright}>© 2025 FORBIDDEN CHRONICLES</div>
+            <div className={styles.copyright}>© 2025 eclipseu webdev</div>
           </div>
         </div>
       </div>

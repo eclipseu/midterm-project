@@ -1,37 +1,60 @@
-/* Modal Component Styles */
+/* Modal Component Styles - Creepy Edition */
 
-/* Dark overlay behind modal */
+/* Dark, blood-splattered overlay behind modal */
 .overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(2px);
-  z-index: 999;
-  animation: overlay-fade-in 0.3s ease-out;
+  background: radial-gradient(
+      circle at 20% 30%,
+      rgba(60, 0, 0, 0.4) 0%,
+      transparent 50%
+    ),
+    radial-gradient(circle at 80% 70%, rgba(40, 0, 0, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(30, 0, 0, 0.5) 0%, transparent 50%),
+    rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(3px) grayscale(0.3);
+  z-index: 99999;
+  animation: overlay-fade-in 0.8s ease-out, blood-drip 15s infinite linear;
 }
 
 .modal {
-  /* Eerie, black-themed background */
-  background: radial-gradient(circle, #000000 0%, #0d0000 100%);
-  border: 2px solid #8b0000; /* Darker red border for a bloody theme */
-  border-radius: 1rem;
-  /* Use a fluid width that clamps between a min and max size */
-  width: clamp(300px, 90%, 600px);
-  /* Removed max-height and overflow-y to prevent scrollbar */
-  box-shadow: 0 0 15px 4px rgba(139, 0, 0, 0.6); /* Darker, more subtle red glow */
-  /* Fixes the position and centering */
+  /* Distressed, organic-looking background */
+  background: radial-gradient(ellipse at center, #0a0000 0%, #000000 70%),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(80, 0, 0, 0.1) 2px,
+      rgba(80, 0, 0, 0.1) 4px
+    );
+  border: 1px solid #600000;
+  border-image: linear-gradient(45deg, #600000, #300000, #600000) 1;
+  border-radius: 0;
+  /* Uneven, organic shape */
+  clip-path: polygon(
+    0% 3%,
+    3% 0%,
+    97% 0%,
+    100% 3%,
+    100% 97%,
+    97% 100%,
+    3% 100%,
+    0% 97%
+  );
+  width: clamp(300px, 85%, 550px);
+  box-shadow: 0 0 25px 8px rgba(139, 0, 0, 0.3),
+    inset 0 0 40px 10px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(139, 0, 0, 0.2);
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  /* Ensure the modal is on top of other content */
-  z-index: 1000;
-  /* Add padding to prevent content from touching edges on small screens */
+  z-index: 100000;
   padding: 1rem;
-  animation: modal-fade-in 0.3s ease-out, eerie-pulse 5s infinite alternate;
+  animation: modal-fade-in 0.8s ease-out, eerie-float 8s ease-in-out infinite,
+    static-flicker 20s infinite;
 }
 
 .header {
@@ -39,70 +62,132 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem 1.5rem 0;
-  border-bottom: 1px solid rgba(139, 0, 0, 0.3); /* Lighter red divider */
+  border-bottom: 1px solid rgba(139, 0, 0, 0.4);
   margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.header::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #8b0000, transparent);
+  animation: blood-flow 3s infinite linear;
 }
 
 .title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #8b0000; /* Darker, bloody red title */
-  font-family: var(--font-elegant);
+  color: #8b0000;
+  font-family: "Courier New", monospace;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.1em;
   margin: 0;
+  text-shadow: 0 0 10px rgba(139, 0, 0, 0.7), 0 0 20px rgba(139, 0, 0, 0.4),
+    2px 2px 0px #000;
+  animation: text-flicker 5s infinite alternate;
 }
 
 .closeButton {
-  background: none;
-  border: none;
-  color: #8b0000; /* Darker red close button */
+  background: rgba(30, 0, 0, 0.8);
+  border: 1px solid #600000;
+  color: #8b0000;
   cursor: pointer;
   padding: 0.5rem;
-  border-radius: 50%;
-  transition: all 0.3s ease;
+  border-radius: 0;
+  clip-path: polygon(
+    20% 0%,
+    80% 0%,
+    100% 20%,
+    100% 80%,
+    80% 100%,
+    20% 100%,
+    0% 80%,
+    0% 20%
+  );
+  transition: all 0.4s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 2.5rem;
   height: 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.closeButton::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(139, 0, 0, 0.4),
+    transparent
+  );
+  transition: left 0.6s ease;
 }
 
 .closeButton:hover {
-  background: rgba(139, 0, 0, 0.2);
-  color: #b22222;
-  transform: scale(1.1);
+  background: rgba(60, 0, 0, 0.9);
+  color: #ff0000;
+  transform: scale(1.1) rotate(90deg);
+  box-shadow: 0 0 15px rgba(139, 0, 0, 0.6);
+}
+
+.closeButton:hover::before {
+  left: 100%;
 }
 
 .closeButton:active {
-  transform: scale(0.95);
+  transform: scale(0.95) rotate(90deg);
 }
 
 .closeIcon {
   width: 1.25rem;
   height: 1.25rem;
-  transition: transform 0.2s ease;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 0 2px rgba(139, 0, 0, 0.5));
 }
 
 .closeButton:hover .closeIcon {
-  transform: rotate(90deg);
+  transform: rotate(180deg);
 }
 
 .content {
   padding: 0 1.5rem 1.5rem;
-  color: #e5e5e5; /* Changed to off-white for better readability */
+  color: #c0c0c0;
   line-height: 1.6;
-  font-family: var(--font-body);
+  font-family: "Courier New", monospace;
+  text-shadow: 1px 1px 1px #000;
 }
-
+.menuActions {
+  display: flex;
+  flex-direction: column; /* stack buttons vertically */
+  align-items: center; /* center horizontally */
+  justify-content: center; /* optional: center vertically inside parent */
+  gap: 1rem; /* spacing between buttons */
+  width: 100%;
+  margin-top: 1.5rem;
+}
 .content h2 {
-  color: #8b0000; /* Darker red for headings */
-  font-family: var(--font-elegant);
+  color: #8b0000;
+  font-family: "Courier New", monospace;
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
   font-size: 1.25rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 8px rgba(139, 0, 0, 0.5);
+  border-left: 3px solid #8b0000;
+  padding-left: 0.5rem;
+  animation: text-pulse 4s infinite;
 }
 
 .content h3 {
@@ -110,123 +195,342 @@
   margin-top: 1rem;
   margin-bottom: 0.5rem;
   font-size: 1.1rem;
+  text-shadow: 0 0 5px rgba(139, 0, 0, 0.3);
 }
 
 .content p {
   margin-bottom: 1rem;
+  position: relative;
 }
 
 .content ul {
-  margin: 0.5rem 0 1rem 1.5rem;
+  margin: 0.5rem 0 1rem 1rem;
   list-style-type: none;
 }
 
 .content li {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
   position: relative;
-  padding-left: 1rem;
+  padding-left: 1.5rem;
 }
 
 .content li::before {
-  content: "▶";
+  content: "🩸";
   position: absolute;
   left: 0;
-  color: #8b0000; /* Darker red marker */
-  font-size: 0.8rem;
+  color: #8b0000;
+  font-size: 0.7rem;
+  filter: drop-shadow(0 0 2px #000);
 }
 
 .content strong {
-  color: #8b0000; /* Darker red for strong text */
-  font-weight: 600;
+  color: #8b0000;
+  font-weight: 700;
+  text-shadow: 0 0 3px rgba(139, 0, 0, 0.3);
 }
 
 .content code {
-  background: rgba(139, 0, 0, 0.1);
+  background: rgba(30, 0, 0, 0.6);
   padding: 0.125rem 0.25rem;
-  border-radius: 0.25rem;
-  font-family: monospace;
+  border-radius: 0;
+  font-family: "Courier New", monospace;
   color: #8b0000;
-  border: 1px solid rgba(139, 0, 0, 0.2);
+  border: 1px solid #600000;
+  text-shadow: 0 0 2px #000;
 }
 
-/* Modal animations */
+/* Creepy Animations */
 @keyframes overlay-fade-in {
   from {
     opacity: 0;
+    backdrop-filter: blur(10px) grayscale(1);
   }
   to {
     opacity: 1;
+    backdrop-filter: blur(3px) grayscale(0.3);
   }
 }
 
 @keyframes modal-fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes eerie-pulse {
   0% {
-    box-shadow: 0 0 15px 4px rgba(139, 0, 0, 0.6);
-    border-color: #8b0000;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8) rotateX(45deg);
   }
-  50% {
-    box-shadow: 0 0 20px 6px rgba(139, 0, 0, 0.8);
-    border-color: #8b0000;
+  70% {
+    opacity: 0.7;
+    transform: translate(-50%, -50%) scale(1.02) rotateX(0deg);
   }
   100% {
-    box-shadow: 0 0 15px 4px rgba(139, 0, 0, 0.6);
-    border-color: #8b0000;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotateX(0deg);
   }
 }
 
-/* Responsive Design */
+@keyframes eerie-float {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) translateY(0px) rotate(0.1deg);
+  }
+  50% {
+    transform: translate(-50%, -50%) translateY(-5px) rotate(-0.1deg);
+  }
+}
+
+@keyframes static-flicker {
+  0%,
+  90%,
+  92%,
+  94%,
+  96%,
+  98%,
+  100% {
+    opacity: 1;
+    filter: hue-rotate(0deg);
+  }
+  91%,
+  93%,
+  95%,
+  97%,
+  99% {
+    opacity: 0.97;
+    filter: hue-rotate(5deg) brightness(1.1);
+  }
+}
+
+@keyframes blood-drip {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 0% 100%;
+  }
+}
+
+@keyframes blood-flow {
+  0% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+}
+
+@keyframes text-flicker {
+  0%,
+  18%,
+  22%,
+  25%,
+  53%,
+  57%,
+  100% {
+    text-shadow: 0 0 10px rgba(139, 0, 0, 0.7), 0 0 20px rgba(139, 0, 0, 0.4),
+      2px 2px 0px #000;
+  }
+  20%,
+  24%,
+  55% {
+    text-shadow: 0 0 5px rgba(139, 0, 0, 0.3), 0 0 10px rgba(139, 0, 0, 0.2),
+      2px 2px 0px #000, 0 0 30px rgba(255, 0, 0, 0.6);
+  }
+}
+
+@keyframes text-pulse {
+  0%,
+  100% {
+    text-shadow: 0 0 8px rgba(139, 0, 0, 0.5);
+  }
+  50% {
+    text-shadow: 0 0 15px rgba(139, 0, 0, 0.8), 0 0 25px rgba(255, 0, 0, 0.4);
+  }
+}
+
+/* Enhanced creepy button styles */
+.soundToggleButton,
+.resumeButton,
+.exitButton {
+  font-family: "Courier New", monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 0;
+  clip-path: polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  text-shadow: 1px 1px 1px #000;
+}
+
+.soundToggleButton::before,
+.resumeButton::before,
+.exitButton::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(139, 0, 0, 0.3),
+    transparent
+  );
+  transition: left 0.6s ease;
+}
+
+.soundToggleButton:hover::before,
+.resumeButton:hover::before,
+.exitButton:hover::before {
+  left: 100%;
+}
+
+.soundToggleEnabled {
+  background-color: rgba(30, 60, 0, 0.3);
+  color: #608000;
+  border: 1px solid #406000;
+  box-shadow: 0 0 10px rgba(80, 128, 0, 0.2);
+}
+
+.soundToggleEnabled:hover {
+  background-color: rgba(40, 80, 0, 0.4);
+  color: #80a000;
+  box-shadow: 0 0 15px rgba(100, 160, 0, 0.4);
+}
+
+.soundToggleMuted {
+  background-color: rgba(60, 0, 0, 0.4);
+  color: #a00000;
+  border: 1px solid #800000;
+  box-shadow: 0 0 10px rgba(160, 0, 0, 0.3);
+}
+
+.soundToggleMuted:hover {
+  background-color: rgba(80, 0, 0, 0.5);
+  color: #ff0000;
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+}
+
+.resumeButton,
+.exitButton {
+  background-color: rgba(40, 0, 0, 0.5);
+  color: #a00000;
+  border: 1px solid #600000;
+  box-shadow: 0 0 8px rgba(139, 0, 0, 0.2);
+}
+
+.resumeButton:hover,
+.exitButton:hover {
+  background-color: rgba(60, 0, 0, 0.6);
+  color: #ff0000;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Base slider */
+.volumeSlider {
+  -webkit-appearance: none; /* remove default */
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background: #200000;
+  border-radius: 0;
+  outline: none;
+  cursor: pointer;
+}
+
+/* Track for WebKit browsers (Chrome, Edge, Safari) */
+.volumeSlider::-webkit-slider-runnable-track {
+  height: 6px;
+  background: linear-gradient(90deg, #600000, #200000);
+  border: 1px solid #400000;
+}
+
+/* Thumb for WebKit */
+.volumeSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #8b0000;
+  border: 1px solid #600000;
+  box-shadow: 0 0 10px rgba(139, 0, 0, 0.6);
+  margin-top: -4px; /* centers thumb on track */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.volumeSlider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+}
+
+/* Track for Firefox */
+.volumeSlider::-moz-range-track {
+  height: 6px;
+  background: linear-gradient(90deg, #600000, #200000);
+  border: 1px solid #400000;
+}
+
+/* Thumb for Firefox */
+.volumeSlider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #8b0000;
+  border: 1px solid #600000;
+  box-shadow: 0 0 10px rgba(139, 0, 0, 0.6);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.volumeSlider::-moz-range-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+}
+
+/* Responsive Design with creepy adjustments */
 @media (max-width: 768px) {
   .modal {
-    margin: 1rem;
-  }
-
-  .header {
-    padding: 1rem 1rem 0;
-    margin-bottom: 1rem;
+    margin: 0.5rem;
+    clip-path: polygon(
+      0% 2%,
+      2% 0%,
+      98% 0%,
+      100% 2%,
+      100% 98%,
+      98% 100%,
+      2% 100%,
+      0% 98%
+    );
   }
 
   .title {
-    font-size: 1.25rem;
+    font-size: 1.3rem;
   }
 
   .content {
-    padding: 0 1rem 1rem;
-  }
-
-  .closeButton {
-    width: 2rem;
-    height: 2rem;
-  }
-
-  .closeIcon {
-    width: 1rem;
-    height: 1rem;
+    font-size: 0.9rem;
   }
 }
 
 @media (max-width: 480px) {
   .modal {
-    margin: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  .header {
+    padding: 1rem 1rem 0;
   }
 
   .title {
     font-size: 1.1rem;
   }
 
-  .content h2 {
-    font-size: 1.1rem;
-  }
-
-  .content h3 {
-    font-size: 1rem;
+  .content {
+    padding: 0 1rem 1rem;
   }
 }

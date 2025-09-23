@@ -15,7 +15,10 @@ import type {
   Choice,
   Player,
 } from "../types/game.d";
-import { saveGame as persistSaveGame, loadGame as persistLoadGame } from "../services/persistence";
+import {
+  saveGame as persistSaveGame,
+  loadGame as persistLoadGame,
+} from "../services/persistence";
 import storyData from "../data/story.json";
 
 // LocalStorage key for game save data - removed, using persistence service now
