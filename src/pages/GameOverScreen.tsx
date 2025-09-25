@@ -53,7 +53,9 @@ export const GameOverScreen = () => {
     itemsCollected: gameState.player.inventory.length,
     finalHealth: gameState.isGameOver ? 0 : gameState.player.hp, // Always 0 when game over
     maxHealth: gameState.player.maxHp,
-    damageReceived: gameState.player.maxHp - Math.max(0, gameState.player.hp),
+    damageReceived: gameState.isGameOver
+      ? 100
+      : gameState.player.maxHp - Math.max(0, gameState.player.hp),
     currentLocation: gameState.currentNodeId,
     playerName: gameState.player.name,
   };
@@ -137,7 +139,9 @@ export const GameOverScreen = () => {
             <div className="text-3xl font-bold text-purple-400">
               {finalStats.damageReceived}
             </div>
-            <p className="text-sm text-gray-400">Damage Taken</p>
+            <p className="text-sm text-gray-400">
+              {finalStats.finalHealth < finalStats.maxHealth ? "Damage Taken" : "Damage Taken"}
+            </p>
           </div>
         </div>
 

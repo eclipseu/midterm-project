@@ -21,8 +21,6 @@ import {
 } from "../services/persistence";
 import storyData from "../data/story.json";
 
-// LocalStorage key for game save data - removed, using persistence service now
-
 // Initial player state
 const createInitialPlayer = (name: string = ""): Player => ({
   name,
@@ -279,10 +277,6 @@ export const GameProvider = ({ children }: GameProviderProps) => {
 
       if (onArrive.takeDamage) {
         dispatch({ type: "TAKE_DAMAGE", amount: onArrive.takeDamage });
-      }
-
-      if (onArrive.heal) {
-        dispatch({ type: "HEAL", amount: onArrive.heal });
       }
     }
   }, [gameState.currentNodeId, gameState.gameStarted, getCurrentNode]);

@@ -36,18 +36,6 @@ export function applyEffects(
     actions.push({ type: "TAKE_DAMAGE", amount: action.takeDamage });
   }
 
-  // Apply healing
-  if (action.heal && action.heal > 0) {
-    actions.push({ type: "HEAL", amount: action.heal });
-  }
-
-  // Note: setFlag would be implemented here if we had a flag system
-  // This could be added later for more complex game mechanics
-  if (action.setFlag) {
-    console.log(`Setting flag: ${action.setFlag}`);
-    // Future implementation: actions.push({ type: 'SET_FLAG', flag: action.setFlag });
-  }
-
   return actions;
 }
 
@@ -263,12 +251,9 @@ export function validateStoryNode(nodeId: string, node: StoryNode) {
 
   // Check actions
   if (node.onArrive) {
-    const { takeDamage, heal } = node.onArrive;
+    const { takeDamage } = node.onArrive;
     if (takeDamage !== undefined && takeDamage < 0) {
       warnings.push(`Node '${nodeId}' has negative damage value`);
-    }
-    if (heal !== undefined && heal < 0) {
-      warnings.push(`Node '${nodeId}' has negative heal value`);
     }
   }
 

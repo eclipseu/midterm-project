@@ -42,8 +42,6 @@ export const ChoiceList = ({
 
   return (
     <div className={`space-y-3 ${className}`}>
-      {/* Header intentionally removed for a cleaner, cinematic choice overlay */}
-
       {visibleChoices.map((choice, index) => {
         const canSelect = canSelectChoice(choice);
         const requiresItem = choice.requires;
@@ -77,10 +75,7 @@ export const ChoiceList = ({
               </div>
             </Button>
 
-            {/* Visual indicator for choice number */}
-            <div className="absolute left-3 top-3 w-6 h-6 bg-red-accent/20 rounded-full flex items-center justify-center text-xs font-bold text-pale-text">
-              {}
-            </div>
+            <div className="absolute left-3 top-3 w-6 h-6 bg-red-accent/20 rounded-full flex items-center justify-center text-xs font-bold text-pale-text"></div>
           </div>
         );
       })}

@@ -1,14 +1,4 @@
-import {
-  Shield,
-  Sword,
-  Zap,
-  Key,
-  Flame,
-  Map,
-  Package,
-  Sparkles,
-  Beaker,
-} from "lucide-react";
+import { Shield, Zap, Package, Sparkles } from "lucide-react";
 import type { ReactElement } from "react";
 
 interface InventoryProps {
@@ -22,29 +12,19 @@ export const Inventory = ({
   playerName,
   className = "",
 }: InventoryProps) => {
-  // Define item icons using Lucide React
   const getItemIcon = (item: string): ReactElement => {
-    // Replaced with a class that uses the horror accent color
     const iconProps = { size: 20, className: "text-horror" };
 
     const itemIcons: Record<string, ReactElement> = {
       Asin: <Sparkles {...iconProps} />, // Salt - sparkles for magical properties
       Bawang: <Zap {...iconProps} />, // Garlic - zap for protective power
       Agimat: <Shield {...iconProps} />, // Amulet - shield for protection
-      Sword: <Sword {...iconProps} />,
-      Shield: <Shield {...iconProps} />,
-      Potion: <Beaker {...iconProps} />,
-      Key: <Key {...iconProps} />,
-      Torch: <Flame {...iconProps} />,
-      Rope: <Package {...iconProps} />, // Using package for rope/misc items
-      Map: <Map {...iconProps} />,
     };
 
     return itemIcons[item] || <Package {...iconProps} />; // Default icon for unknown items
   };
 
   return (
-    // Use the `card-horror` class for a consistent, dark aesthetic
     <div className={`card-horror ${className}`}>
       <div className="flex items-center justify-between mb-2 border-b border-gray-700 pb-2">
         <h3 className="text-base font-elegant text-pale-text">
@@ -61,7 +41,6 @@ export const Inventory = ({
           </p>
         </div>
       ) : (
-        // Use a horror-themed class for the list container
         <div className="space-y-1">
           {items.map((item, index) => (
             <div

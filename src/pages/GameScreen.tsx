@@ -64,6 +64,11 @@ export const GameScreen = () => {
     }
   }, [gameState, saveGame]);
 
+  // Play game background music when component mounts
+  useEffect(() => {
+    playBackground("background");
+  }, [playBackground]);
+
   // Navigate to appropriate screen when game ends (after jumpscare completes for ending nodes)
   useEffect(() => {
     if (gameState.isGameOver && jumpscareCompleted) {
@@ -80,11 +85,6 @@ export const GameScreen = () => {
       return () => clearTimeout(timer);
     }
   }, [gameState.isGameOver, gameState.isVictory, jumpscareCompleted, navigate]);
-
-  // Play game background music when component mounts
-  useEffect(() => {
-    playBackground("background");
-  }, [playBackground]);
 
   const handleChoiceSelect = (choice: Choice) => {
     if (!canSelectChoice(choice)) {
@@ -288,11 +288,6 @@ export const GameScreen = () => {
 
   return (
     <div className="game-screen-container">
-      <div className="absolute top-4 right-4 z-50"></div>
-
-      {/* Game Menu - Fixed positioning handled in component */}
-      <GameMenu />
-
       {/* Dynamic Background Images with Smooth Transitions */}
       {currentBackground && (
         <div
@@ -489,6 +484,9 @@ export const GameScreen = () => {
           </div>
         </div>
       )}
+
+      {/* Game Menu */}
+      <GameMenu />
     </div>
   );
 };

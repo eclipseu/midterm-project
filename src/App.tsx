@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { GameProvider } from "./contexts/GameContext";
 import { AudioProvider } from "./contexts/AudioContext";
-import GameLayout from "./components/layout/GameLayout";
 import StartScreen from "./pages/StartScreen";
 import GameScreen from "./pages/GameScreen";
 import GameOverScreen from "./pages/GameOverScreen";
@@ -12,14 +11,12 @@ function App() {
     <AudioProvider>
       <GameProvider>
         <BrowserRouter>
-          <GameLayout>
-            <Routes>
-              <Route path="/" element={<StartScreen />} />
-              <Route path="/game" element={<GameScreen />} />
-              <Route path="/gameover" element={<GameOverScreen />} />
-              <Route path="/victory" element={<VictoryScreen />} />
-            </Routes>
-          </GameLayout>
+          <Routes>
+            <Route path="/" element={<StartScreen />} />
+            <Route path="/game" element={<GameScreen />} />
+            <Route path="/gameover" element={<GameOverScreen />} />
+            <Route path="/victory" element={<VictoryScreen />} />
+          </Routes>
         </BrowserRouter>
       </GameProvider>
     </AudioProvider>

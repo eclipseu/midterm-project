@@ -125,8 +125,8 @@ export const VictoryScreen = () => {
           </div>
 
           <div className="stat-tile victory-stat-tile stat-glow-gold text-center">
-            <div className="text-3xl font-bold text-yellow-300">⭐</div>
-            <p className="text-sm text-gray-300">Perfect Victory</p>
+            <div className="text-3xl font-bold text-yellow-300"></div>
+            <p className="text-sm text-gray-300">Victory</p>
           </div>
         </div>
 

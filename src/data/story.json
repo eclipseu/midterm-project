@@ -60,7 +60,7 @@
         "to": "altar"
       },
       {
-        "text": "Touch the mysterious dark stain on the floor (Warning: Dangerous)",
+        "text": "Touch the mysterious dark stain on the floor.",
         "to": "darkStain",
         "effects": [
           {
@@ -86,7 +86,8 @@
       },
       {
         "text": "You have no garlic! Fight it with your bolo!",
-        "to": "fightWakwakNoGarlic"
+        "to": "fightWakwakNoGarlic",
+        "hideIf": "Bawang"
       },
       {
         "text": "This isn't a Manananggal. The salt is useless here.",
@@ -235,7 +236,8 @@
       },
       {
         "text": "You don't have salt! Hack at it with your bolo!",
-        "to": "badEnding_noSalt"
+        "to": "badEnding_noSalt",
+        "hideIf": "Asin"
       }
     ]
   },
