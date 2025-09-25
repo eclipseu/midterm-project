@@ -164,9 +164,8 @@
     },
     "choices": [
       {
-        "text": "You fell for the oldest trick in the book! (Lose 25 HP)",
-        "to": "tiyanakDamage",
-        "hideIf": "Agimat"
+        "text": "You fell for the oldest trick in the book!",
+        "to": "tiyanakDamage"
       },
       {
         "text": "Your Agimat glows, repelling the creature before it can bite!",
